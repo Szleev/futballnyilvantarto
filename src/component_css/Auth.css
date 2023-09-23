@@ -1,0 +1,109 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+h1, h2, h3, p, a {
+    font-family: 'Roboto', sans-serif;
+}
+
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.focim-container{
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.focim{
+    font-size: 35px;
+    color: #3586ff;
+    text-transform: uppercase;
+    transition: font-size 0.3s ease-in-out;
+}
+.rounded-square {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-field {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+    width: 200px;
+}
+
+button {
+    padding: 5px 5px;
+    background-color: #3586ff;
+    margin-top: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-radius: 10px;
+    width: 220px;
+    height: 50px;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.google-button {
+    padding: 5px 5px;
+    background-color: #737373;
+    margin-top: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-radius: 10px;
+    width: 220px;
+    height: 50px;
+    font-size: 15px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.google-button::before {
+    content: "";
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg');
+    background-size: 24px;
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+.google-button:hover{
+    background-color: #545454;
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+button:hover {
+    background-color: #0f6bf5;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.focim:hover{
+    font-size: 40px;
+}

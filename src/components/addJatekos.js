@@ -2,12 +2,15 @@ import {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import {addDoc, collection, deleteDoc, doc, getDocs, updateDoc} from "firebase/firestore";
 import {auth, database, storage} from "../config/firebase-config";
-import {ref, uploadBytes} from "firebase/storage";
+import {ref, uploadBytes, listAll, getDownloadURL, deleteObject} from "firebase/storage";
 import {findAllByDisplayValue} from "@testing-library/react";
-import {signOut} from "firebase/auth";
+import {getAuth, signOut} from "firebase/auth";
 import '../component_css/addJatekos.css'
+import {v4} from 'uuid'
+import * as url from "url";
 export const AddJatekos = () => {
     const [jatekosLista, setJatekosLista] = useState([])
+    const auth = getAuth();
     const navigate = useNavigate();
     const [isDialogOpen, setDialogOpen] = useState(false);
 
@@ -27,7 +30,9 @@ export const AddJatekos = () => {
     const [updatedJatekos, setUpdatedJatekos] = useState("")
 
     //Fájl feltöltése
-    const [fileUpload, setFileUpload] = useState(null)
+    const [imageUpload, setImageUpload] = useState(null)
+    const [imageList,setImageList] = useState([])
+    const imageListRef = ref(storage, "Jatekos_profil_kepek/")
 
     const jatekosCollectionRef = collection(database,"Játékosok")
 
@@ -54,7 +59,13 @@ export const AddJatekos = () => {
     }
 
     useEffect(() => {
-
+        listAll(imageListRef).then((response) => {
+            response.items.forEach((item) =>{
+                getDownloadURL(item).then((url) =>{
+                    setImageList((prev) => [...prev, url]);
+                })
+            })
+        });
         getJatekosLista();
     }, []);
 
@@ -79,15 +90,34 @@ export const AddJatekos = () => {
         }
     }
 
-    const uploadFile = async () =>{
-        if (!fileUpload) return;
-        const fileFolderRef = ref(storage, `Jatekos_profil_kepek/${fileUpload.name}`);
-        try{
-            await uploadBytes(fileFolderRef, fileUpload);
-        }catch (err){
+    const uploadFile = async () => {
+        if (!imageUpload) return;
+        const user = auth.currentUser;
+
+        if (!user) {
+            console.error("Nincs bejelentkezett felhasználó.");
+            return;
+        }
+
+        const fileFolderRef = ref(storage, `Jatekos_profil_kepek/${user.uid}/${imageUpload.name + v4()}`);
+
+        try {
+            const userImageRefs = await listAll(ref(storage, `Jatekos_profil_kepek/${user.uid}`));
+
+            const snapshot = await uploadBytes(fileFolderRef, imageUpload);
+            const url = await getDownloadURL(snapshot.ref);
+
+            await Promise.all(userImageRefs.items.map(async (item) => {
+                await deleteObject(item);
+            }));
+
+            setImageList([url]);
+        } catch (err) {
             console.error(err);
         }
     }
+
+
     const logOut = async () => {
         const confirmed = window.confirm('Biztosan ki szeretnél lépni?');
         if (confirmed){
@@ -107,8 +137,8 @@ export const AddJatekos = () => {
                 <button className="profilbutton">Profil</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
+            <h1 className="profileh1">Profil</h1>
             <div className="input-container">
-                <h1>Profil</h1>
             <input placeholder="Játékos Keresztneve..." onChange={(e) => setUjJatekosKeresztnev(e.target.value)}/> <input placeholder="Játékos Vezetékneve..." onChange={(e) => setUjJatekosVezeteknev(e.target.value)}/>
             <input placeholder="Születési hely irányítószáma..." type="number" onChange={(e) => setUjIrSzam(Number(e.target.value))}/> <input placeholder="Születésihely neve..." onChange={(e) => setUjSzulHely(e.target.value)}/>
             <input placeholder="Születési év..." type="number" onChange={(e) => setUjSzulEv(Number(e.target.value))}/>
@@ -116,6 +146,9 @@ export const AddJatekos = () => {
             <input placeholder="Súly..." type="number" onChange={(e) => setUjSuly(Number(e.target.value))}/>
             <input placeholder="Nemzetiség..." onChange={(e) => setUjNemzetiseg(e.target.value)}/>
             <input placeholder="Poszt..." onChange={(e) => setUjPoszt(e.target.value)}/>
+                {imageList.map((url) =>{
+                    return <img src={url}/>
+                })}
             <button onClick={adatokBeadasa}>Adatok mentése</button>
         </div>
             <div>
@@ -165,8 +198,9 @@ export const AddJatekos = () => {
             </div>
             <div className="image-container">
                 <h2>Profilkép feltöltése</h2>
-                <input type="file" onChange={(e) => setFileUpload(e.target.files[0])}/>
+                <input type="file" onChange={(e) => setImageUpload(e.target.files[0])}/>
                 <button onClick={uploadFile}>Fájl feltöltése</button>
+
             </div>
 
         </div>

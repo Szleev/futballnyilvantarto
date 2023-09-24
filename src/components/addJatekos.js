@@ -146,11 +146,11 @@ export const AddJatekos = () => {
             <input placeholder="Súly..." type="number" onChange={(e) => setUjSuly(Number(e.target.value))}/>
             <input placeholder="Nemzetiség..." onChange={(e) => setUjNemzetiseg(e.target.value)}/>
             <input placeholder="Poszt..." onChange={(e) => setUjPoszt(e.target.value)}/>
-                {imageList.map((url) =>{
-                    return <img src={url}/>
-                })}
             <button onClick={adatokBeadasa}>Adatok mentése</button>
         </div>
+            {imageList.map((url) =>{
+                return <img src={url}/>
+            })}
             <div>
                 {jatekosLista.map((jatekos) =>(
                     <div className="adatok-container">

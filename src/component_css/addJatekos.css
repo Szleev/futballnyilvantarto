@@ -112,6 +112,19 @@ table{
     align-items: center;
     z-index: 1000;
 }
+.navigation-bar button{
+    margin-right: 10px;
+}
+.clubbutton, .profilbutton{
+    max-width: 100px;
+    max-height: 30px;
+    background-color: #57886c;
+}
+.playersbutton{
+    max-width: 200px;
+    max-height: 30px;
+    background-color: #57886c;
+}
 .logOut{
     max-width: 100px;
     max-height: 30px;

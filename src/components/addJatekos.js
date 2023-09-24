@@ -102,9 +102,13 @@ export const AddJatekos = () => {
     return (
         <div className="jatekos-container">
             <div className="navigation-bar">
+                <button className="playersbutton">Igazolható játékosok</button>
+                <button className="clubbutton">Klubbok</button>
+                <button className="profilbutton">Profil</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
             <div className="input-container">
+                <h1>Profil</h1>
             <input placeholder="Játékos Keresztneve..." onChange={(e) => setUjJatekosKeresztnev(e.target.value)}/> <input placeholder="Játékos Vezetékneve..." onChange={(e) => setUjJatekosVezeteknev(e.target.value)}/>
             <input placeholder="Születési hely irányítószáma..." type="number" onChange={(e) => setUjIrSzam(Number(e.target.value))}/> <input placeholder="Születésihely neve..." onChange={(e) => setUjSzulHely(e.target.value)}/>
             <input placeholder="Születési év..." type="number" onChange={(e) => setUjSzulEv(Number(e.target.value))}/>

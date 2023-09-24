@@ -26,7 +26,7 @@ h1, h2, h3, p, a {
 }
 .focim{
     font-size: 35px;
-    color: #3586ff;
+    color: #097F26;;
     text-transform: uppercase;
     transition: font-size 0.3s ease-in-out;
 }
@@ -40,6 +40,7 @@ h1, h2, h3, p, a {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 50px;
 }
 
 .input-field {
@@ -53,7 +54,7 @@ h1, h2, h3, p, a {
 
 button {
     padding: 5px 5px;
-    background-color: #3586ff;
+    background-color: #097F26;
     margin-top: 5px;
     color: white;
     border: none;
@@ -100,10 +101,8 @@ button {
 }
 
 button:hover {
-    background-color: #0f6bf5;
+    background-color: #07591b;
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
-.focim:hover{
-    font-size: 40px;
-}
+

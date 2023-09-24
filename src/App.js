@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import React from 'react';
-import {Auth} from "./components/auth";
 import {AddJatekos} from "./components/addJatekos";
 import {Home} from "./components/Home";
 import {} from "./components/auth";

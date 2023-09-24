@@ -1,13 +1,15 @@
 import {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
 import {addDoc, collection, deleteDoc, doc, getDocs, updateDoc} from "firebase/firestore";
 import {auth, database, storage} from "../config/firebase-config";
 import {ref, uploadBytes} from "firebase/storage";
 import {findAllByDisplayValue} from "@testing-library/react";
 import {signOut} from "firebase/auth";
-
-
+import '../component_css/addJatekos.css'
 export const AddJatekos = () => {
     const [jatekosLista, setJatekosLista] = useState([])
+    const navigate = useNavigate();
+    const [isDialogOpen, setDialogOpen] = useState(false);
 
     //Új játékos hozzáadása
     const [ujJatekosVezeteknev, setUjJatekosVezeteknev] = useState("");
@@ -87,15 +89,22 @@ export const AddJatekos = () => {
         }
     }
     const logOut = async () => {
-        try{
-            await signOut(auth);
-        } catch (err){
-            console.error(err);
+        const confirmed = window.confirm('Biztosan ki szeretnél lépni?');
+        if (confirmed){
+            try{
+                await signOut(auth);
+                navigate('/');
+            } catch (err){
+                console.error(err);
+            }
         }
     };
     return (
-        <div>
-            <div>
+        <div className="jatekos-container">
+            <div className="navigation-bar">
+                <button className="logOut" onClick={logOut}>Kilépés</button>
+            </div>
+            <div className="input-container">
             <input placeholder="Játékos Keresztneve..." onChange={(e) => setUjJatekosKeresztnev(e.target.value)}/> <input placeholder="Játékos Vezetékneve..." onChange={(e) => setUjJatekosVezeteknev(e.target.value)}/>
             <input placeholder="Születési hely irányítószáma..." type="number" onChange={(e) => setUjIrSzam(Number(e.target.value))}/> <input placeholder="Születésihely neve..." onChange={(e) => setUjSzulHely(e.target.value)}/>
             <input placeholder="Születési év..." type="number" onChange={(e) => setUjSzulEv(Number(e.target.value))}/>
@@ -103,30 +112,59 @@ export const AddJatekos = () => {
             <input placeholder="Súly..." type="number" onChange={(e) => setUjSuly(Number(e.target.value))}/>
             <input placeholder="Nemzetiség..." onChange={(e) => setUjNemzetiseg(e.target.value)}/>
             <input placeholder="Poszt..." onChange={(e) => setUjPoszt(e.target.value)}/>
-            <button onClick={adatokBeadasa}>Adatok beadása</button>
+            <button onClick={adatokBeadasa}>Adatok mentése</button>
         </div>
             <div>
                 {jatekosLista.map((jatekos) =>(
-                    <div>
-                        <h1>Játékos adatai</h1>
-                        <p>Név: {jatekos.Vezeteknev} {jatekos.Keresztnev}</p>
-                        <p>Születési hely: {jatekos.Szul_hely_irszam}, {jatekos.Szul_hely}</p>
-                        <p>Születési év: {jatekos.Szul_ev}</p>
-                        <p>Magasság: {jatekos.Magassag}cm</p>
-                        <p>Súly: {jatekos.Suly}kg</p>
-                        <p>Nemzetiség: {jatekos.Nemzetiség}</p>
-                        <p>Poszt: {jatekos.Poszt}</p>
-                        <button onClick={() => deleteJatekos(jatekos.id)}>Játékos törlése</button>
+                    <div className="adatok-container">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <th colSpan="2"><h1>Saját adataim</h1></th>
+                            </tr>
+                            <tr>
+                                <td><h2>Név:</h2></td>
+                                <td><p>{jatekos.Vezeteknev} {jatekos.Keresztnev}</p></td>
+                            </tr>
+                            <tr>
+                                <td><h2>Születési hely:</h2></td>
+                                <td><p>{jatekos.Szul_hely_irszam}, {jatekos.Szul_hely}</p></td>
+                            </tr>
+                            <tr>
+                                <td><h2>Születési év:</h2></td>
+                                <td><p>{jatekos.Szul_ev}</p></td>
+                            </tr>
+                            <tr>
+                                <td><h2>Magasság:</h2></td>
+                                <td><p>{jatekos.Magassag}cm</p></td>
+                            </tr>
+                            <tr>
+                                <td><h2>Súly:</h2></td>
+                                <td><p>{jatekos.Suly}kg</p></td>
+                            </tr>
+                            <tr>
+                                <td><h2>Nemzetiség:</h2></td>
+                                <td><p>{jatekos.Nemzetiség}</p></td>
+                            </tr>
+                            <tr>
+                                <td><h2>Poszt:</h2></td>
+                                <td><p>{jatekos.Poszt}</p></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <button onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
                         <input placeholder="Új súly..." onChange={(e) => setUpdatedJatekos(e.target.value)}/>
                         <button onClick={() => updateJatekos(jatekos.id)}>Mentés</button>
                     </div>
                 ))}
             </div>
-            <div>
+            <div className="image-container">
+                <h2>Profilkép feltöltése</h2>
                 <input type="file" onChange={(e) => setFileUpload(e.target.files[0])}/>
                 <button onClick={uploadFile}>Fájl feltöltése</button>
             </div>
-            <button onClick={logOut}>Kilépés</button>
+
         </div>
 );
 }

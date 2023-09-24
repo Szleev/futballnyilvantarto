@@ -7,10 +7,10 @@ import '../component_css/Auth.css';
 import '../component_css/background.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { initializeApp } from "firebase/app";
 
 
 export const Auth = () => {
-
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

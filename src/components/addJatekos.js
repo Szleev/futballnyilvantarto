@@ -47,9 +47,12 @@ export const AddJatekos = () => {
     }
 
     const deleteJatekos = async (id) =>{
+        const confirmed = window.confirm('Biztosan törlöd a profilod?');
         const jatekosDoc = doc(database, "Játékosok", id)
-        await deleteDoc(jatekosDoc);
-        getJatekosLista();
+        if (confirmed){
+            await deleteDoc(jatekosDoc);
+            getJatekosLista();
+        }
     }
 
     const updateJatekos = async (id,) =>{
@@ -71,22 +74,25 @@ export const AddJatekos = () => {
 
 
     const adatokBeadasa = async () =>{
-        try{
-            await addDoc(jatekosCollectionRef, {
-                Vezeteknev: ujJatekosVezeteknev,
-                Keresztnev: ujJatekosKeresztnev,
-                Szul_hely_irszam: ujIrSzam,
-                Szul_hely: ujSzulHely,
-                Szul_ev: ujSzulEv,
-                Magassag: ujMagassag,
-                Suly: ujSuly,
-                Nemzetiség: ujNemzetiseg,
-                Poszt: ujPoszt,
-                userId: auth?.currentUser.uid,
-            })
-            getJatekosLista();
-        } catch (err) {
-            console.error(err)
+        const confirmed = window.confirm('Biztosan mented az adatokat? Ellenőrizd le, hogy mindent helyesen írtál-e be! Egyes adatok nem lesznek változtathatóak!');
+        if (confirmed){
+            try{
+                await addDoc(jatekosCollectionRef, {
+                    Vezeteknev: ujJatekosVezeteknev,
+                    Keresztnev: ujJatekosKeresztnev,
+                    Szul_hely_irszam: ujIrSzam,
+                    Szul_hely: ujSzulHely,
+                    Szul_ev: ujSzulEv,
+                    Magassag: ujMagassag,
+                    Suly: ujSuly,
+                    Nemzetiség: ujNemzetiseg,
+                    Poszt: ujPoszt,
+                    userId: auth?.currentUser.uid,
+                })
+                getJatekosLista();
+            } catch (err) {
+                console.error(err)
+            }
         }
     }
 
@@ -189,17 +195,18 @@ export const AddJatekos = () => {
                             </tr>
                             </tbody>
                         </table>
-
-                        <button onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
-                        <input placeholder="Új súly..." onChange={(e) => setUpdatedJatekos(e.target.value)}/>
-                        <button onClick={() => updateJatekos(jatekos.id)}>Mentés</button>
+                        <div className="updateData">
+                            <button onClick={() => deleteJatekos(jatekos.id)}>Mentett adatok törlése</button>
+                            <input placeholder="Új súly..." onChange={(e) => setUpdatedJatekos(e.target.value)}/>
+                            <button onClick={() => updateJatekos(jatekos.id)}>Mentés</button>
+                        </div>
                     </div>
                 ))}
             </div>
             <div className="image-container">
                 <h2>Profilkép feltöltése</h2>
                 <input type="file" onChange={(e) => setImageUpload(e.target.files[0])}/>
-                <button onClick={uploadFile}>Fájl feltöltése</button>
+                <button  onClick={uploadFile}>Fájl feltöltése</button>
 
             </div>
 

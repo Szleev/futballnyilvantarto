@@ -3,9 +3,18 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     background-image: url("/public/websitebg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 
+}
+.updateData button{
+    background-color: #EF6F6F;
+}
+.deleteGomb:hover{
+    background-color: #F24242;
 }
 .profileh1{
     background-color: #f4f4f4;
@@ -13,11 +22,15 @@
     margin-bottom: 20px;
     border-radius: 10px;
     color: #097F26;
+    margin-top: 60px;
 }
 img{
     width: 300px;
     height: 300px;
     margin: 10px;
+    border: #f4f4f4 solid 2px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 .input-container{
     display: flex;
@@ -124,9 +137,9 @@ table{
     margin-bottom: 20px;
     width: 100%;
     background-color: #097F26;
-    min-height: 40px;
+    min-height: 30px;
     align-items: center;
-    z-index: 1000;
+    z-index: 1;
 }
 .navigation-bar button{
     margin-right: 10px;

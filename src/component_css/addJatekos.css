@@ -1,4 +1,4 @@
-.jatekos-container {
+.data-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,6 +9,29 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
 
+}
+.save{
+    margin-top: 20px;
+    width: 150px;
+    height: 50px;
+}
+.success-message {
+    transition: opacity 0.3s ease-in-out;
+    color: #097F26;
+    font-weight: bold;
+}
+.fade-out {
+    animation: fadeOut 2s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
 }
 .updateData button{
     background-color: #EF6F6F;
@@ -30,7 +53,16 @@ img{
     margin: 10px;
     border: #f4f4f4 solid 2px;
     border-radius: 10px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.dropDownMenu{
+    margin-bottom: 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 16px;
+    color: #333;
+    width: 250px;
 }
 .input-container{
     display: flex;
@@ -124,6 +156,11 @@ table{
     justify-content: center;
     align-items: center;
     text-align: center;
+
+}
+.image-container h2{
+    color: #097F26;
+    margin-bottom: 20px;
 }
 .image-container button{
     width: 120px;

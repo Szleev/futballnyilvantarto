@@ -25,16 +25,59 @@ export const AddJatekos = () => {
     const [ujNemzetiseg, setUjNemzetiseg] = useState("");
     const [ujPoszt, setUjPoszt] = useState("");
 
-
-    //Update Játékos
-    const [updatedJatekos, setUpdatedJatekos] = useState("")
-
     //Fájl feltöltése
     const [imageUpload, setImageUpload] = useState(null)
     const [imageList,setImageList] = useState([])
     const imageListRef = ref(storage, "Jatekos_profil_kepek/")
+    const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const jatekosCollectionRef = collection(database,"Játékosok")
+
+
+    const uploadFile = async () => {
+        if (!imageUpload) {
+            alert('Válassz ki egy fájlt a feltöltéshez!');
+            return;
+        }
+
+        const user = auth.currentUser;
+
+        if (!user) {
+            console.error('Nincs bejelentkezett felhasználó.');
+            return;
+        }
+
+        const fileFolderRef = ref(
+            storage,
+            `Jatekos_profil_kepek/${user.uid}/${imageUpload.name + v4()}`
+        );
+
+        try {
+            const userImageRefs = await listAll(
+                ref(storage, `Jatekos_profil_kepek/${user.uid}`)
+            );
+
+            const snapshot = await uploadBytes(fileFolderRef, imageUpload);
+            const url = await getDownloadURL(snapshot.ref);
+
+            await Promise.all(
+                userImageRefs.items.map(async (item) => {
+                    await deleteObject(item);
+                })
+            );
+
+            setIsUploadSuccess(true);
+            setTimeout(() => {
+                setIsUploadSuccess(false);
+            }, 3000);
+
+            setImageList([url]);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
 
     const getJatekosLista = async () => {
         try {
@@ -45,22 +88,6 @@ export const AddJatekos = () => {
             console.error(err);
         }
     }
-
-    const deleteJatekos = async (id) =>{
-        const confirmed = window.confirm('Biztosan törlöd a profilod?');
-        const jatekosDoc = doc(database, "Játékosok", id)
-        if (confirmed){
-            await deleteDoc(jatekosDoc);
-            getJatekosLista();
-        }
-    }
-
-    const updateJatekos = async (id,) =>{
-        const jatekosDoc = doc(database, "Játékosok", id)
-        await updateDoc(jatekosDoc,{Suly: updatedJatekos});
-        getJatekosLista();
-    }
-
     useEffect(() => {
         listAll(imageListRef).then((response) => {
             response.items.forEach((item) =>{
@@ -73,55 +100,64 @@ export const AddJatekos = () => {
     }, []);
 
 
-    const adatokBeadasa = async () =>{
-        const confirmed = window.confirm('Biztosan mented az adatokat? Ellenőrizd le, hogy mindent helyesen írtál-e be! Egyes adatok nem lesznek változtathatóak!');
-        if (confirmed){
-            try{
-                await addDoc(jatekosCollectionRef, {
-                    Vezeteknev: ujJatekosVezeteknev,
-                    Keresztnev: ujJatekosKeresztnev,
-                    Szul_hely_irszam: ujIrSzam,
-                    Szul_hely: ujSzulHely,
-                    Szul_ev: ujSzulEv,
-                    Magassag: ujMagassag,
-                    Suly: ujSuly,
-                    Nemzetiség: ujNemzetiseg,
-                    Poszt: ujPoszt,
-                    userId: auth?.currentUser.uid,
-                })
-                getJatekosLista();
-            } catch (err) {
-                console.error(err)
+    const adatokBeadasa = async () => {
+        if (
+            ujJatekosVezeteknev &&
+            ujJatekosKeresztnev &&
+            ujIrSzam !== null &&
+            ujSzulHely &&
+            ujSzulEv !== null &&
+            ujMagassag !== null &&
+            ujSuly !== null &&
+            ujNemzetiseg &&
+            ujPoszt &&
+            imageUpload !== null
+        ) {
+            const confirmed = window.confirm('Biztosan mented az adatokat?');
+            if (confirmed) {
+                try {
+
+                    if (imageUpload) {
+                        const user = auth.currentUser;
+
+                        if (!user) {
+                            console.error("Nincs bejelentkezett felhasználó.");
+                            return;
+                        }
+
+                        const fileFolderRef = ref(storage, `Jatekos_profil_kepek/${user.uid}/${imageUpload.name + v4()}`);
+
+                        const snapshot = await uploadBytes(fileFolderRef, imageUpload);
+                        const profilkepUrl = await getDownloadURL(snapshot.ref);
+
+                        const jatekosData = {
+                            Vezeteknev: ujJatekosVezeteknev,
+                            Keresztnev: ujJatekosKeresztnev,
+                            Szul_hely_irszam: ujIrSzam,
+                            Szul_hely: ujSzulHely,
+                            Szul_ev: ujSzulEv,
+                            Magassag: ujMagassag,
+                            Suly: ujSuly,
+                            Nemzetiség: ujNemzetiseg,
+                            Poszt: ujPoszt,
+                            userId: auth?.currentUser.uid,
+                            ProfilkepUrl: imageList[0]
+                        };
+
+                        await addDoc(jatekosCollectionRef, jatekosData);
+                        navigate('/profil');
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
             }
+        } else {
+            alert('Minden mezőt ki kell tölteni, és egy profilképet is fel kell tölteni!');
         }
-    }
+    };
 
-    const uploadFile = async () => {
-        if (!imageUpload) return;
-        const user = auth.currentUser;
 
-        if (!user) {
-            console.error("Nincs bejelentkezett felhasználó.");
-            return;
-        }
 
-        const fileFolderRef = ref(storage, `Jatekos_profil_kepek/${user.uid}/${imageUpload.name + v4()}`);
-
-        try {
-            const userImageRefs = await listAll(ref(storage, `Jatekos_profil_kepek/${user.uid}`));
-
-            const snapshot = await uploadBytes(fileFolderRef, imageUpload);
-            const url = await getDownloadURL(snapshot.ref);
-
-            await Promise.all(userImageRefs.items.map(async (item) => {
-                await deleteObject(item);
-            }));
-
-            setImageList([url]);
-        } catch (err) {
-            console.error(err);
-        }
-    }
 
 
     const logOut = async () => {
@@ -135,80 +171,55 @@ export const AddJatekos = () => {
             }
         }
     };
+    const handleOptionChange = (e) => {
+        setUjPoszt(e.target.value);
+    };
+    const navigateToProfil = () => {
+        navigate('/checkProfile');
+    };
+    const navigateToPlayers = () => {
+        navigate('/jatekosok');
+    };
     return (
-        <div className="jatekos-container">
+        <div className="data-container">
             <div className="navigation-bar">
-                <button className="playersbutton">Igazolható játékosok</button>
-                <button className="clubbutton">Klubbok</button>
-                <button className="profilbutton">Profil</button>
+                <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
+                <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <h1 className="profileh1">Profil</h1>
+            <h1 className="profileh1">Töltsd ki a mezőket!</h1>
             <div className="input-container">
-            <input placeholder="Játékos Keresztneve..." onChange={(e) => setUjJatekosKeresztnev(e.target.value)}/> <input placeholder="Játékos Vezetékneve..." onChange={(e) => setUjJatekosVezeteknev(e.target.value)}/>
-            <input placeholder="Születési hely irányítószáma..." type="number" onChange={(e) => setUjIrSzam(Number(e.target.value))}/> <input placeholder="Születésihely neve..." onChange={(e) => setUjSzulHely(e.target.value)}/>
-            <input placeholder="Születési év..." type="number" onChange={(e) => setUjSzulEv(Number(e.target.value))}/>
-            <input placeholder="Magasság..." type="number" onChange={(e) => setUjMagassag(Number(e.target.value))}/>
-            <input placeholder="Súly..." type="number" onChange={(e) => setUjSuly(Number(e.target.value))}/>
-            <input placeholder="Nemzetiség..." onChange={(e) => setUjNemzetiseg(e.target.value)}/>
-            <input placeholder="Poszt..." onChange={(e) => setUjPoszt(e.target.value)}/>
-            <button onClick={adatokBeadasa}>Adatok mentése</button>
-        </div>
-            {imageList.map((url) =>{
-                return <img src={url}/>
-            })}
-            <div>
-                {jatekosLista.map((jatekos) =>(
-                    <div className="adatok-container">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <th colSpan="2"><h1>Saját adataim</h1></th>
-                            </tr>
-                            <tr>
-                                <td><h2>Név:</h2></td>
-                                <td><p>{jatekos.Vezeteknev} {jatekos.Keresztnev}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Születési hely:</h2></td>
-                                <td><p>{jatekos.Szul_hely_irszam}, {jatekos.Szul_hely}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Születési év:</h2></td>
-                                <td><p>{jatekos.Szul_ev}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Magasság:</h2></td>
-                                <td><p>{jatekos.Magassag}cm</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Súly:</h2></td>
-                                <td><p>{jatekos.Suly}kg</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Nemzetiség:</h2></td>
-                                <td><p>{jatekos.Nemzetiség}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Poszt:</h2></td>
-                                <td><p>{jatekos.Poszt}</p></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div className="updateData">
-                            <button onClick={() => deleteJatekos(jatekos.id)}>Mentett adatok törlése</button>
-                            <input placeholder="Új súly..." onChange={(e) => setUpdatedJatekos(e.target.value)}/>
-                            <button onClick={() => updateJatekos(jatekos.id)}>Mentés</button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-            <div className="image-container">
-                <h2>Profilkép feltöltése</h2>
-                <input type="file" onChange={(e) => setImageUpload(e.target.files[0])}/>
-                <button  onClick={uploadFile}>Fájl feltöltése</button>
+                <input placeholder="Keresztnév..." onChange={(e) => setUjJatekosKeresztnev(e.target.value)} required />
+                <input placeholder="Vezetéknév..." onChange={(e) => setUjJatekosVezeteknev(e.target.value)} required />
+                <input placeholder="Születési hely irányítószáma..." type="number" onChange={(e) => setUjIrSzam(Number(e.target.value))} required />
+                <input placeholder="Születésihely neve..." onChange={(e) => setUjSzulHely(e.target.value)} required />
+                <input placeholder="Születési év..." type="number" onChange={(e) => setUjSzulEv(Number(e.target.value))} required />
+                <input placeholder="Magasság..." type="number" onChange={(e) => setUjMagassag(Number(e.target.value))} required />
+                <input placeholder="Súly..." type="number" onChange={(e) => setUjSuly(Number(e.target.value))} required />
+                <input placeholder="Nemzetiség..." onChange={(e) => setUjNemzetiseg(e.target.value)} required />
+                <select className="dropDownMenu" value={ujPoszt} onChange={handleOptionChange} required>
+                    <option value="">Válassz egy posztot...</option>
+                    <option value="Kapus">Kapus</option>
+                    <option value="Védő">Védő</option>
+                    <option value="Középpályás">Középpályás</option>
+                    <option value="Csatár">Csatár</option>
+                    <option value="Támadó középpályás">Támadó középpályás</option>
+                    <option value="Védekező középpályás">Védekező középpályás</option>
+                    <option value="Szélső középpályás">Szélső középpályás</option>
+                </select>
 
             </div>
+
+
+            <div className="image-container">
+                <h2>Profilkép feltöltése</h2>
+                <input type="file" onChange={(e) => setImageUpload(e.target.files[0])} />
+                <button onClick={uploadFile}>Fájl feltöltése</button>
+                {isUploadSuccess && (
+                    <p className="success-message fade-out">Sikeres feltöltés</p>
+                )}
+            </div>
+            <button className="save" onClick={adatokBeadasa}>Adatok mentése</button>
 
         </div>
 );

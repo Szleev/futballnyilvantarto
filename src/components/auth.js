@@ -28,7 +28,7 @@ export const Auth = () => {
         } else {
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
-                navigate('/addjatekos');
+                navigate('/uploadData');
             } catch (error) {
                 console.error("Hiba a regisztráció során:", error);
             }
@@ -37,7 +37,7 @@ export const Auth = () => {
     const signInWithGoogle = async () => {
         try{
             await signInWithPopup(auth, googleprovider);
-            navigate('/addjatekos');
+            navigate('/checkProfile');
         } catch (err){
             console.error(err);
         }
@@ -57,7 +57,7 @@ export const Auth = () => {
                         <h1 className="focim">Szabadon igazolható labdarúgókat nyilvántartó webes felület</h1>
                     </div>
                     <div className="rounded-square">
-                        <img src='/logInScreenlogo.png' style={{ width: '200px', height: '200px' }}/>
+                        <img className="loginScreenLogo" src='/logInScreenlogo.png' style={{ width: '200px', height: '200px' }}/>
                         <input
                             className="input-field"
                             placeholder="E-mail..."

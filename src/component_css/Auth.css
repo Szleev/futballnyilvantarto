@@ -42,7 +42,9 @@ h1, h2, h3, p, a {
     align-items: center;
     margin-bottom: 50px;
 }
-
+.loginScreenLogo{
+    box-shadow: none;
+}
 .input-field {
     padding: 10px;
     border: 1px solid #ccc;

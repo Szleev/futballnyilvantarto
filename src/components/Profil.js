@@ -21,6 +21,10 @@ export const Profil = () =>{
 
     //Update Játékos
     const [updatedJatekos, setUpdatedJatekos] = useState("")
+    const [editingJatekos, setEditingJatekos] = useState(null);
+    const editJatekos = (id) => {
+        setEditingJatekos(id);
+    };
 
     useEffect(() => {
         const fetchJatekosLista = async () => {
@@ -85,8 +89,8 @@ export const Profil = () =>{
             } catch (err) {
                 console.error(err);
             }
+            navigate('/uploadData')
         }
-        navigate('/uploadData')
     };
 
 
@@ -99,16 +103,24 @@ export const Profil = () =>{
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
             <div>
-                {jatekosLista.map((jatekos) =>(
+                {jatekosLista.map((jatekos) => (
                     <div className="adatok-container" key={jatekos.id}>
                         <div className="profilkep">
                             <img src={jatekos.ProfilkepUrl} alt={`${jatekos.Vezeteknev} ${jatekos.Keresztnev} profilkép`} />
                         </div>
-                        <table>
+                        <table className="adatTable">
                             <tbody>
                             <tr>
                                 <td><h2>Név:</h2></td>
                                 <td><p>{jatekos.Vezeteknev} {jatekos.Keresztnev}</p></td>
+                            </tr>
+                            <tr>
+                                <td><h2>E-mail:</h2></td>
+                                <td><p>{jatekos.Email}</p></td>
+                            </tr>
+                            <tr>
+                                <td><h2>Telefonszám:</h2></td>
+                                <td><p>{jatekos.Telefonszam}</p></td>
                             </tr>
                             <tr>
                                 <td><h2>Születési hely:</h2></td>
@@ -137,14 +149,16 @@ export const Profil = () =>{
                             </tbody>
                         </table>
                         <div className="updateData">
-
-                            <input placeholder="Új súly..." onChange={(e) => setUpdatedJatekos(e.target.value)}/>
+                            <input placeholder="Új súly..." onChange={(e) => setUpdatedJatekos(e.target.value)} />
                             <button onClick={() => updateJatekos(jatekos.id)}>Mentés</button>
+                            <br/>
+                            <button className="deleteButton" onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
                         </div>
-                        <button className="deleteButton" onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
+
                     </div>
                 ))}
             </div>
+
 
         </div>
     );

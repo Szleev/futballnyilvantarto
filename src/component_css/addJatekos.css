@@ -33,12 +33,6 @@
         display: none;
     }
 }
-.updateData button{
-    background-color: #EF6F6F;
-}
-.deleteGomb:hover{
-    background-color: #F24242;
-}
 .profileh1{
     background-color: #f4f4f4;
     padding: 8px;
@@ -94,60 +88,7 @@ input:hover, input:focus {
 table{
     width: 100%;
 }
-.adatok-container {
-    background-color: #f4f4f4;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-}
-.adatok-container h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    text-align: center;
-}
 
-.adatok-container h2 {
-    flex: 1;
-    font-size: 18px;
-    text-align: left;
-}
-
-.adatok-container p {
-    flex: 1;
-    margin: 0;
-    text-align: right;
-}
-
-.adatok-container button {
-    background-color: #097F26;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 10px;
-    font-size: 14px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    width: 100px;
-    height: 30px;
-}
-.adatok-container input {
-    margin-right: 15px;
-    margin-left: 15px;
-    margin-bottom: 10px;
-    background-color: #f2f2f2;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 8px;
-    font-size: 16px;
-    color: #333;
-    width: 250px;
-}
-.adatok-container button:hover {
-    background-color: #07591b;
-}
 .image-container{
     background-color: #f4f4f4;
     border-radius: 10px;

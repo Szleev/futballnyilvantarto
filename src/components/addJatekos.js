@@ -24,6 +24,8 @@ export const AddJatekos = () => {
     const [ujSuly, setUjSuly] = useState(0);
     const [ujNemzetiseg, setUjNemzetiseg] = useState("");
     const [ujPoszt, setUjPoszt] = useState("");
+    const [ujEmail, setUjEmail] = useState("");
+    const [ujTelefonszam, setUjTelefonszam] = useState("");
 
     //Fájl feltöltése
     const [imageUpload, setImageUpload] = useState(null)
@@ -111,12 +113,13 @@ export const AddJatekos = () => {
             ujSuly !== null &&
             ujNemzetiseg &&
             ujPoszt &&
-            imageUpload !== null
+            imageUpload !== null &&
+            ujEmail && // Hozzáadott email mező ellenőrzése
+            ujTelefonszam // Hozzáadott telefonszám mező ellenőrzése
         ) {
             const confirmed = window.confirm('Biztosan mented az adatokat?');
             if (confirmed) {
                 try {
-
                     if (imageUpload) {
                         const user = auth.currentUser;
 
@@ -140,6 +143,8 @@ export const AddJatekos = () => {
                             Suly: ujSuly,
                             Nemzetiség: ujNemzetiseg,
                             Poszt: ujPoszt,
+                            Email: ujEmail,
+                            Telefonszam: ujTelefonszam,
                             userId: auth?.currentUser.uid,
                             ProfilkepUrl: imageList[0]
                         };
@@ -155,6 +160,7 @@ export const AddJatekos = () => {
             alert('Minden mezőt ki kell tölteni, és egy profilképet is fel kell tölteni!');
         }
     };
+
 
 
 
@@ -187,31 +193,33 @@ export const AddJatekos = () => {
                 <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <h1 className="profileh1">Töltsd ki a mezőket!</h1>
+            <h1 className="profileh1">Regisztrálja adatait!</h1>
             <div className="input-container">
-                <input placeholder="Keresztnév..." onChange={(e) => setUjJatekosKeresztnev(e.target.value)} required />
-                <input placeholder="Vezetéknév..." onChange={(e) => setUjJatekosVezeteknev(e.target.value)} required />
-                <input placeholder="Születési hely irányítószáma..." type="number" onChange={(e) => setUjIrSzam(Number(e.target.value))} required />
-                <input placeholder="Születésihely neve..." onChange={(e) => setUjSzulHely(e.target.value)} required />
-                <input placeholder="Születési év..." type="number" onChange={(e) => setUjSzulEv(Number(e.target.value))} required />
-                <input placeholder="Magasság..." type="number" onChange={(e) => setUjMagassag(Number(e.target.value))} required />
-                <input placeholder="Súly..." type="number" onChange={(e) => setUjSuly(Number(e.target.value))} required />
-                <input placeholder="Nemzetiség..." onChange={(e) => setUjNemzetiseg(e.target.value)} required />
-                <select className="dropDownMenu" value={ujPoszt} onChange={handleOptionChange} required>
-                    <option value="">Válassz egy posztot...</option>
-                    <option value="Kapus">Kapus</option>
-                    <option value="Védő">Védő</option>
-                    <option value="Középpályás">Középpályás</option>
-                    <option value="Csatár">Csatár</option>
-                    <option value="Támadó középpályás">Támadó középpályás</option>
-                    <option value="Védekező középpályás">Védekező középpályás</option>
-                    <option value="Szélső középpályás">Szélső középpályás</option>
-                </select>
+            <input placeholder="Keresztnév..." onChange={(e) => setUjJatekosKeresztnev(e.target.value)} required />
+            <input placeholder="Vezetéknév..." onChange={(e) => setUjJatekosVezeteknev(e.target.value)} required />
+            <input placeholder="Születési hely irányítószáma..." type="number" onChange={(e) => setUjIrSzam(Number(e.target.value))} required />
+            <input placeholder="Születésihely neve..." onChange={(e) => setUjSzulHely(e.target.value)} required />
+            <input placeholder="Születési év..." type="number" onChange={(e) => setUjSzulEv(Number(e.target.value))} required />
+            <input placeholder="Magasság..." type="number" onChange={(e) => setUjMagassag(Number(e.target.value))} required />
+            <input placeholder="Súly..." type="number" onChange={(e) => setUjSuly(Number(e.target.value))} required />
+            <input placeholder="Nemzetiség..." onChange={(e) => setUjNemzetiseg(e.target.value)} required />
+            <input placeholder="E-mail..." onChange={(e) => setUjEmail(e.target.value)} required />
+            <input placeholder="Telefonszám..." onChange={(e) => setUjTelefonszam(e.target.value)} required />
+            <select className="dropDownMenu" value={ujPoszt} onChange={handleOptionChange} required>
+                <option value="">Válassz egy posztot...</option>
+                <option value="Kapus">Kapus</option>
+                <option value="Védő">Védő</option>
+                <option value="Középpályás">Középpályás</option>
+                <option value="Csatár">Csatár</option>
+                <option value="Támadó középpályás">Támadó középpályás</option>
+                <option value="Védekező középpályás">Védekező középpályás</option>
+                <option value="Szélső középpályás">Szélső középpályás</option>
+            </select>
+        </div>
 
-            </div>
 
 
-            <div className="image-container">
+    <div className="image-container">
                 <h2>Profilkép feltöltése</h2>
                 <input type="file" onChange={(e) => setImageUpload(e.target.files[0])} />
                 <button onClick={uploadFile}>Fájl feltöltése</button>

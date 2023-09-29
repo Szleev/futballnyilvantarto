@@ -161,11 +161,6 @@ export const AddJatekos = () => {
         }
     };
 
-
-
-
-
-
     const logOut = async () => {
         const confirmed = window.confirm('Biztosan ki szeretnél lépni?');
         if (confirmed){

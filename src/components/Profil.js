@@ -18,14 +18,6 @@ export const Profil = () =>{
     const [jatekosLista, setJatekosLista] = useState([]);
     const jatekosCollectionRef = collection(database,"Játékosok")
 
-
-    //Update Játékos
-    const [updatedJatekos, setUpdatedJatekos] = useState("")
-    const [editingJatekos, setEditingJatekos] = useState(null);
-    const editJatekos = (id) => {
-        setEditingJatekos(id);
-    };
-
     useEffect(() => {
         const fetchJatekosLista = async () => {
             try {
@@ -55,6 +47,9 @@ export const Profil = () =>{
     const navigateToPlayers = () => {
         navigate('/jatekosok');
     };
+    const navigateToEdit = () =>{
+        navigate('/szerkesztes');
+    }
 
 
     const logOut = async () => {
@@ -69,11 +64,7 @@ export const Profil = () =>{
         }
     };
 
-    const updateJatekos = async (id,) =>{
-        const jatekosDoc = doc(database, "Játékosok", id)
-        await updateDoc(jatekosDoc,{Suly: updatedJatekos});
-        getJatekosLista();
-    };
+
 
     const deleteJatekos = async (id, profilképUrl) => {
         const confirmed = window.confirm('Biztosan törlöd a profilod?');
@@ -149,10 +140,9 @@ export const Profil = () =>{
                             </tbody>
                         </table>
                         <div className="updateData">
-                            <input placeholder="Új súly..." onChange={(e) => setUpdatedJatekos(e.target.value)} />
-                            <button onClick={() => updateJatekos(jatekos.id)}>Mentés</button>
-                            <br/>
                             <button className="deleteButton" onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
+                            <br/>
+                            <button className="deleteButton" onClick={(navigateToEdit)}>Szerkesztés</button>
                         </div>
 
                     </div>

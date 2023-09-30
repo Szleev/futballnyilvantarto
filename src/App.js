@@ -7,6 +7,7 @@ import { Jatekosok } from "./components/browsePlayers";
 import { CheckUserProfile } from "./components/CheckUserProfile";
 import { Szerkesztes } from "./components/Szerkesztes";
 import {AnimatePresence} from "framer-motion"
+import PlayerDetails from "./components/playerDetails";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/jatekosok" element={<Jatekosok />} />
                     <Route path="/checkProfile" element={<CheckUserProfile />} />
                     <Route path="/szerkesztes" element={<Szerkesztes />} />
+                    <Route path="/reszletek" element={<PlayerDetails />} />
                 </Routes>
             </Router>
 

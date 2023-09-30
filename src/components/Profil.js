@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
-import {addDoc, collection, deleteDoc, doc, getDocs, updateDoc} from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, getDocs, updateDoc, query, where} from "firebase/firestore";
 import {auth, database, storage} from "../config/firebase-config";
 import {ref, uploadBytes, listAll, getDownloadURL, deleteObject} from "firebase/storage";
 import {findAllByDisplayValue} from "@testing-library/react";
@@ -23,9 +23,15 @@ export const Profil = () =>{
     useEffect(() => {
         const fetchJatekosLista = async () => {
             try {
-                const data = await getDocs(jatekosCollectionRef);
-                const jatekosok = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
-                setJatekosLista(jatekosok);
+                const user = auth.currentUser;
+                if (user) {
+                    const q = query(collection(database, "Játékosok"), where("userId", "==", user.uid));
+                    const data = await getDocs(q);
+                    if (!data.empty) {
+                        const jatekosok = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
+                        setJatekosLista(jatekosok);
+                    }
+                }
             } catch (err) {
                 console.error(err);
             }

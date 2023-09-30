@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 import { auth, database } from "../config/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 import "../component_css/playerDetails.css";
@@ -9,29 +9,23 @@ const PlayerDetails = () => {
     const navigate = useNavigate();
     const { playerId } = useParams();
 
+
     const auth = getAuth();
     const [selectedPlayer, setSelectedPlayer] = useState(null);
 
     useEffect(() => {
         const fetchPlayerDetails = async () => {
             try {
-                const jatekosCollectionRef = collection(database, "Játékosok");
-                const jatekosSnapshot = await getDocs(jatekosCollectionRef);
-                const jatekosokData = [];
+                const jatekosDocRef = doc(database, "Játékosok", playerId);
+                const jatekosSnapshot = await getDoc(jatekosDocRef);
 
-                jatekosSnapshot.forEach((doc) => {
-                    jatekosokData.push(doc.data());
-                });
-
-                const player = jatekosokData.find((jatekos) => jatekos.uid === playerId);
-
-                if (player) {
-                    setSelectedPlayer(player);
+                if (jatekosSnapshot.exists()) {
+                    setSelectedPlayer(jatekosSnapshot.data());
                 } else {
                     navigate("/jatekosok");
                 }
             } catch (error) {
-                console.error("Hiba a játékosok lekérdezése közben:", error);
+                console.error("Hiba a játékos lekérdezése közben:");
             }
         };
 
@@ -71,22 +65,50 @@ const PlayerDetails = () => {
                     Kilépés
                 </button>
             </div>
+            <h1 className="detail-header">Játékos részletei</h1>
             {selectedPlayer ? (
-                <div className="player-details">
-                    <h1>{`${selectedPlayer.Vezeteknev} ${selectedPlayer.Keresztnev}`}</h1>
-                    <p>E-mail: {selectedPlayer.Email}</p>
-                    <p>Telefonszám: {selectedPlayer.Telefonszam}</p>
-                    <p>Születési hely: {selectedPlayer.Szul_hely_irszam}, {selectedPlayer.Szul_hely}</p>
-                    <p>Születési év: {selectedPlayer.Szul_ev}</p>
-                    <p>Magasság: {selectedPlayer.Magassag} cm</p>
-                    <p>Súly: {selectedPlayer.Suly} kg</p>
-                    <p>Nemzetiség: {selectedPlayer.Nemzetiség}</p>
-                    <p>Poszt: {selectedPlayer.Poszt}</p>
-                    {/* További adatok megjelenítése */}
-                </div>
+                <table className="player-details">
+                    <tr>
+                        <th>Név:</th>
+                        <td>{`${selectedPlayer.Vezeteknev} ${selectedPlayer.Keresztnev}`}</td>
+                    </tr>
+                    <tr>
+                        <th>E-mail:</th>
+                        <td>{selectedPlayer.Email}</td>
+                    </tr>
+                    <tr>
+                        <th>Telefonszám:</th>
+                        <td>{selectedPlayer.Telefonszam}</td>
+                    </tr>
+                    <tr>
+                        <th>Születési hely:</th>
+                        <td>{`${selectedPlayer.Szul_hely_irszam}, ${selectedPlayer.Szul_hely}`}</td>
+                    </tr>
+                    <tr>
+                        <th>Születési év:</th>
+                        <td>{selectedPlayer.Szul_ev}</td>
+                    </tr>
+                    <tr>
+                        <th>Magasság:</th>
+                        <td>{selectedPlayer.Magassag} cm</td>
+                    </tr>
+                    <tr>
+                        <th>Súly:</th>
+                        <td>{selectedPlayer.Suly} kg</td>
+                    </tr>
+                    <tr>
+                        <th>Nemzetiség:</th>
+                        <td>{selectedPlayer.Nemzetiség}</td>
+                    </tr>
+                    <tr>
+                        <th>Poszt:</th>
+                        <td>{selectedPlayer.Poszt}</td>
+                    </tr>
+                </table>
             ) : (
-                <p>Betöltés...</p>
+                <p className="loading">Betöltés...</p>
             )}
+
         </div>
     );
 };

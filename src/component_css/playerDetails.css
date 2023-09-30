@@ -9,4 +9,31 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+.loading{
+    background-color: #f4f4f4;
+    padding: 5px;
+    color: #097F26;
+    border-radius: 10px;
+}
+.detail-header{
+    background-color: #f4f4f4;
+    padding: 5px;
+    color: #097F26;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+.player-details{
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    border-collapse: collapse;
 
+}
+.player-details th{
+    padding: 10px;
+    text-align: left;
+}
+.player-details td{
+    text-align: center;
+}

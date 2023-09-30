@@ -20,7 +20,8 @@ function App() {
                     <Route path="/jatekosok" element={<Jatekosok />} />
                     <Route path="/checkProfile" element={<CheckUserProfile />} />
                     <Route path="/szerkesztes" element={<Szerkesztes />} />
-                    <Route path="/reszletek" element={<PlayerDetails />} />
+                    <Route path="/reszletek/:playerId" element={<PlayerDetails />} />
+
                 </Routes>
             </Router>
 

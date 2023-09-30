@@ -36,9 +36,11 @@ export const Jatekosok = () => {
         navigate("/checkProfile");
     };
 
-    const navigateToDetails = () => {
-        navigate("/reszletek");
+    const navigateToDetails = (playerId) => {
+        navigate(`/reszletek/${playerId}`);
+
     };
+
 
     const navigateToPlayers = () => {
         navigate("/jatekosok");
@@ -80,7 +82,7 @@ export const Jatekosok = () => {
                         />
                         <h2>{`${jatekos.Vezeteknev} ${jatekos.Keresztnev}`}</h2>
                         <p>{jatekos.Poszt}</p>
-                        <button onClick={navigateToDetails}>Játékos részletei</button>
+                        <button onClick={() => navigateToDetails(jatekos.uid)}>Játékos részletei</button>
                     </div>
                 ))}
             </div>

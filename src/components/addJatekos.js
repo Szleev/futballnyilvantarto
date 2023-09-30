@@ -114,8 +114,8 @@ export const AddJatekos = () => {
             ujNemzetiseg &&
             ujPoszt &&
             imageUpload !== null &&
-            ujEmail && // Hozzáadott email mező ellenőrzése
-            ujTelefonszam // Hozzáadott telefonszám mező ellenőrzése
+            ujEmail &&
+            ujTelefonszam
         ) {
             const confirmed = window.confirm('Biztosan mented az adatokat?');
             if (confirmed) {

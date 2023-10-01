@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { collection, getDocs, getDoc, doc } from "firebase/firestore";
+import {collection, getDocs, getDoc, doc, where, query} from "firebase/firestore";
 import { auth, database } from "../config/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 import "../component_css/playerDetails.css";
@@ -16,18 +16,21 @@ const PlayerDetails = () => {
     useEffect(() => {
         const fetchPlayerDetails = async () => {
             try {
-                const jatekosDocRef = doc(database, "Játékosok", playerId);
-                const jatekosSnapshot = await getDoc(jatekosDocRef);
+                const jatekosCollectionRef = collection(database, "Játékosok");
+                const querySnapshot = await getDocs(query(jatekosCollectionRef, where("userId", "==", playerId)));
 
-                if (jatekosSnapshot.exists()) {
-                    setSelectedPlayer(jatekosSnapshot.data());
+                if (!querySnapshot.empty) {
+                    const jatekosDoc = querySnapshot.docs[0];
+                    setSelectedPlayer(jatekosDoc.data());
                 } else {
-                    navigate("/jatekosok");
+                    navigate('/jatekosok');
                 }
             } catch (error) {
-                console.error("Hiba a játékos lekérdezése közben:");
+                console.error("Hiba a játékos lekérdezése közben:", error);
             }
         };
+
+
 
         fetchPlayerDetails();
     }, [playerId, navigate]);

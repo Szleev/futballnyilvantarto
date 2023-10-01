@@ -36,8 +36,8 @@ export const Jatekosok = () => {
         navigate("/checkProfile");
     };
 
-    const navigateToDetails = (playerId) => {
-        navigate(`/reszletek/${playerId}`);
+    const navigateToDetails = (userId) => {
+        navigate(`/reszletek/${userId}`);
 
     };
 
@@ -74,7 +74,7 @@ export const Jatekosok = () => {
             <h1 className="jatekosok-title">Igazolható játékosok</h1>
             <div className="jatekos-list">
                 {jatekosok.map((jatekos) => (
-                    <div key={jatekos.uid} className="jatekos-card">
+                    <div key={jatekos.userId} className="jatekos-card">
                         <img
                             className="jatekos-card-profilkep"
                             src={jatekos.ProfilkepUrl}
@@ -82,7 +82,8 @@ export const Jatekosok = () => {
                         />
                         <h2>{`${jatekos.Vezeteknev} ${jatekos.Keresztnev}`}</h2>
                         <p>{jatekos.Poszt}</p>
-                        <button onClick={() => navigateToDetails(jatekos.uid)}>Játékos részletei</button>
+                        <p>{jatekos.userId}</p>
+                        <button onClick={() => navigateToDetails(jatekos.userId)}>Játékos részletei</button>
                     </div>
                 ))}
             </div>

@@ -19,9 +19,8 @@ function App() {
                     <Route path="/profil" element={<Profil />} />
                     <Route path="/jatekosok" element={<Jatekosok />} />
                     <Route path="/checkProfile" element={<CheckUserProfile />} />
-                    <Route path="/szerkesztes" element={<Szerkesztes />} />
+                    <Route path="/szerkesztes/:userId" element={<Szerkesztes />} />
                     <Route path="/reszletek/:playerId" element={<PlayerDetails />} />
-
                 </Routes>
             </Router>
 

@@ -9,6 +9,13 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+.detail-div {
+    text-align: center;
+}
+.detail-div img{
+    width: 200px;
+    height: 200px;
+}
 .loading{
     background-color: #f4f4f4;
     padding: 5px;

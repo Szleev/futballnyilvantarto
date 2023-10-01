@@ -1,100 +1,74 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams  } from 'react-router-dom';
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { auth, database } from "../config/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 import '../component_css/Szerkesztes.css';
 import transition from "../transition";
 
+
 export const Szerkesztes = () => {
 
     const navigate = useNavigate();
     const auth = getAuth();
+    const { userId } = useParams();
+    const [userData, setUserData] = useState(null);
 
-
-    const [vezeteknev, setVezeteknev] = useState('');
-    const [keresztnev, setKeresztnev] = useState('');
-    const [email, setEmail] = useState('');
-    const [telefonszam, setTelefonszam] = useState('');
-    //const [szuletesihely, setSzuletesiHely] = useState('');
-    //const [szulhelyirszam, setSzulHelyIrszam] = useState('');
-    //const [szulev, setSzulEv] = useState('');
-    const [magassag, setMagassag] = useState('');
-    const [suly, setSuly] = useState('');
-    const [nemzetiseg, setNemzetiség] = useState('');
-    const [poszt, setPoszt] = useState('');
 
     useEffect(() => {
-        const currentUser = auth.currentUser;
-        if (currentUser) {
-            setVezeteknev(currentUser.Vezeteknev || '');
-            setKeresztnev(currentUser.Keresztnev || '');
-            setEmail(currentUser.Email || '');
-            setTelefonszam(currentUser.Telefonszam || '');
-            //setSzuletesiHely(jatekos.Szul_hely);
-            //setSzulHelyIrszam(jatekos.Szul_hely_irszam);
-            //setSzulEv(jatekos.Szul_ev);
-            setMagassag(currentUser.Magassag || '');
-            setSuly(currentUser.Suly || '');
-            setNemzetiség(currentUser.Nemzetiség || '');
-            setPoszt(currentUser.Poszt || '');
+        const fetchUserData = async () => {
+            try {
+                if (userId) {
+                    const userDocRef = doc(database, "Játékosok", userId);
+                    const userDocSnap = await getDoc(userDocRef);
 
-            const getJatekosData = async () => {
-                const jatekosDocRef = doc(database, "Játékosok", currentUser.uid);
-                try {
-                    const jatekosDoc = await getDoc(jatekosDocRef);
-
-                    if (jatekosDoc.exists()) {
-                        const jatekosData = jatekosDoc.data();
-                        setVezeteknev(jatekosData.Vezeteknev || '');
-                        setKeresztnev(jatekosData.Keresztnev || '');
-                        setEmail(jatekosData.Email || '');
-                        setTelefonszam(jatekosData.Telefonszam || '');
-                        setMagassag(jatekosData.Magassag || '');
-                        setSuly(jatekosData.Magassag || '');
-                        setNemzetiség(jatekosData.Nemzetiség || '');
-                        setPoszt(jatekosData.Poszt);
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        setUserData(userData);
                     } else {
-                        console.log("A játékos dokumentum nem található.");
+                        console.log("A felhasználó dokumentuma nem található.");
                     }
-                } catch (error) {
-                    console.error("Hiba a játékos adatok lekérdezése közben:", error);
+                } else {
+                    console.log("Nincs felhasználói azonosító.");
                 }
-            };
+            } catch (error) {
+                console.error("Hiba a felhasználó adatok lekérdezése közben:", error);
+            }
+        };
 
-            getJatekosData();
+        fetchUserData();
+    }, [userId]);
+
+    const handleInputChange = (fieldName, value) => {
+
+        const updatedUserData = { ...userData };
+        updatedUserData[fieldName] = value;
+
+        setUserData(updatedUserData);
+    };
+
+    const saveChanges = async () => {
+        try {
+            const userDocRef = doc(database, "Játékosok", userId);
+            const docSnapshot = await getDoc(userDocRef);
+
+            if (docSnapshot.exists()) {
+                await updateDoc(userDocRef, userData);
+                alert("A változtatások el lettek mentve!");
+            } else {
+                alert("A felhasználói adatok nem találhatók!");
+            }
+        } catch (error) {
+            console.error("Hiba a változtatások mentése közben:", error);
+            alert("Hiba történt a változtatások mentése közben.");
         }
-    }, [auth]);
+    };
+
+
 
     const navigateToProfil = () => {
         navigate('/checkProfile');
     };
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("fut a kezelő");
-        console.log("Az aktuális felhasználó azonosítója:", auth.currentUser.uid);
-        try {
-
-            const jatekosDocRef = doc(database, "Játékosok", auth.currentUser.uid);
-            const dataToUpdate = {
-                Vezeteknev: vezeteknev,
-                Keresztnev: keresztnev,
-                Email: email,
-                Telefonszam: telefonszam,
-                Magassag: magassag,
-                Suly: suly,
-                Nemzetiség: nemzetiseg,
-                Poszt: poszt
-
-            };
-            await updateDoc(jatekosDocRef, dataToUpdate);
-
-            navigate('/profil');
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
 
     const navigateToPlayers = () => {
         navigate('/jatekosok');
@@ -119,58 +93,32 @@ export const Szerkesztes = () => {
                 <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <form onSubmit={handleSubmit}>
-                <label>Vezetéknév:</label>
-                <input
-                    type="text"
-                    value={vezeteknev}
-                    onChange={(e) => setVezeteknev(e.target.value)}
-                />
-                <label>Keresztnév:</label>
-                <input
-                    type="text"
-                    value={keresztnev}
-                    onChange={(e) => setKeresztnev(e.target.value)}
-                />
-                <label>E-mail:</label>
-                <input
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <label>Telefonszám:</label>
-                <input
-                    type="number"
-                    value={telefonszam}
-                    onChange={(e) => setTelefonszam(e.target.value)}
-                />
-                <label>Magasság:</label>
-                <input
-                    type="number"
-                    value={magassag}
-                    onChange={(e) => setMagassag(e.target.value)}
-                />
-                <label>Súly:</label>
-                <input
-                    type="number"
-                    value={suly}
-                    onChange={(e) => setSuly(e.target.value)}
-                />
-                <label>Nemzetiség:</label>
-                <input
-                    type="text"
-                    value={nemzetiseg}
-                    onChange={(e) => setNemzetiség(e.target.value)}
-                />
-                <label>Poszt:</label>
-                <input
-                    type="text"
-                    value={poszt}
-                    onChange={(e) => setPoszt(e.target.value)}
-                />
-                <button type="submit">Mentés</button>
-            </form>
+            <h1>Adatok szerkesztése</h1>
+            {userData ? (
+                <>
+                    <div>
+                        <label>Vezetéknév:</label>
+                        <input
+                            type="text"
+                            value={userData.Vezeteknev}
+                            onChange={(e) => handleInputChange("vezeteknev", e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Keresztnév:</label>
+                        <input
+                            type="text"
+                            value={userData.Keresztnev}
+                            onChange={(e) => handleInputChange("keresztnev", e.target.value)}
+                        />
+                    </div>
+                    <button onClick={saveChanges}>Mentés</button>
+                </>
+            ) : (
+                <p>Betöltés...</p>
+            )}
         </div>
+
     );
 }
 

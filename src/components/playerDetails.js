@@ -68,44 +68,51 @@ const PlayerDetails = () => {
             </div>
             <h1 className="detail-header">Játékos részletei</h1>
             {selectedPlayer ? (
-                <table className="player-details">
-                    <tr>
-                        <th>Név:</th>
-                        <td>{`${selectedPlayer.Vezeteknev} ${selectedPlayer.Keresztnev}`}</td>
-                    </tr>
-                    <tr>
-                        <th>E-mail:</th>
-                        <td>{selectedPlayer.Email}</td>
-                    </tr>
-                    <tr>
-                        <th>Telefonszám:</th>
-                        <td>{selectedPlayer.Telefonszam}</td>
-                    </tr>
-                    <tr>
-                        <th>Születési hely:</th>
-                        <td>{`${selectedPlayer.Szul_hely_irszam}, ${selectedPlayer.Szul_hely}`}</td>
-                    </tr>
-                    <tr>
-                        <th>Születési év:</th>
-                        <td>{selectedPlayer.Szul_ev}</td>
-                    </tr>
-                    <tr>
-                        <th>Magasság:</th>
-                        <td>{selectedPlayer.Magassag} cm</td>
-                    </tr>
-                    <tr>
-                        <th>Súly:</th>
-                        <td>{selectedPlayer.Suly} kg</td>
-                    </tr>
-                    <tr>
-                        <th>Nemzetiség:</th>
-                        <td>{selectedPlayer.Nemzetiség}</td>
-                    </tr>
-                    <tr>
-                        <th>Poszt:</th>
-                        <td>{selectedPlayer.Poszt}</td>
-                    </tr>
-                </table>
+                <div className="detail-div">
+                    <img
+                        className="player-profile-image"
+                        src={selectedPlayer.ProfilkepUrl}
+                        alt={`${selectedPlayer.Vezeteknev} ${selectedPlayer.Keresztnev}`}
+                    />
+                    <table className="player-details">
+                        <tr>
+                            <th>Név:</th>
+                            <td>{`${selectedPlayer.Vezeteknev} ${selectedPlayer.Keresztnev}`}</td>
+                        </tr>
+                        <tr>
+                            <th>E-mail:</th>
+                            <td>{selectedPlayer.Email}</td>
+                        </tr>
+                        <tr>
+                            <th>Telefonszám:</th>
+                            <td>{selectedPlayer.Telefonszam}</td>
+                        </tr>
+                        <tr>
+                            <th>Születési hely:</th>
+                            <td>{`${selectedPlayer.Szul_hely_irszam}, ${selectedPlayer.Szul_hely}`}</td>
+                        </tr>
+                        <tr>
+                            <th>Születési év:</th>
+                            <td>{selectedPlayer.Szul_ev}</td>
+                        </tr>
+                        <tr>
+                            <th>Magasság:</th>
+                            <td>{selectedPlayer.Magassag} cm</td>
+                        </tr>
+                        <tr>
+                            <th>Súly:</th>
+                            <td>{selectedPlayer.Suly} kg</td>
+                        </tr>
+                        <tr>
+                            <th>Nemzetiség:</th>
+                            <td>{selectedPlayer.Nemzetiség}</td>
+                        </tr>
+                        <tr>
+                            <th>Poszt:</th>
+                            <td>{selectedPlayer.Poszt}</td>
+                        </tr>
+                    </table>
+                </div>
             ) : (
                 <p className="loading">Betöltés...</p>
             )}

@@ -19,6 +19,8 @@ export const Profil = () =>{
     const navigate = useNavigate();
     const [jatekosLista, setJatekosLista] = useState([]);
     const jatekosCollectionRef = collection(database,"Játékosok")
+    const user = auth.currentUser;
+    const userId = user ? user.uid : null;
 
     useEffect(() => {
         const fetchJatekosLista = async () => {
@@ -55,8 +57,8 @@ export const Profil = () =>{
     const navigateToPlayers = () => {
         navigate('/jatekosok');
     };
-    const navigateToEdit = () =>{
-        navigate('/szerkesztes');
+    const navigateToEdit = (userId) =>{
+        navigate(`/szerkesztes/${userId}`);
     }
 
 
@@ -145,12 +147,16 @@ export const Profil = () =>{
                                 <td><h2>Poszt:</h2></td>
                                 <td><p>{jatekos.Poszt}</p></td>
                             </tr>
+                            <tr>
+                                <td><h2>Egyéni profil azonosító:</h2></td>
+                                <td><p>{jatekos.userId}</p></td>
+                            </tr>
                             </tbody>
                         </table>
                         <div className="updateData">
                             <button className="deleteButton" onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
                             <br/>
-                            <button className="deleteButton" onClick={(navigateToEdit)}>Szerkesztés</button>
+                            <button className="editButton" onClick={() => navigateToEdit(userId)}>Szerkesztés</button>
                         </div>
 
                     </div>

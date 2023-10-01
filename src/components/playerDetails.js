@@ -8,8 +8,6 @@ import "../component_css/playerDetails.css";
 const PlayerDetails = () => {
     const navigate = useNavigate();
     const { playerId } = useParams();
-
-
     const auth = getAuth();
     const [selectedPlayer, setSelectedPlayer] = useState(null);
 

@@ -10,6 +10,17 @@
     background-attachment: fixed;
 
 }
+.search-bar{
+    width: 400px;
+    font-size: 16px;
+    height: 30px;
+    border-radius: 5px;
+    padding: 2px;
+}
+.no-result{
+    color: #097F26;
+    font-weight: bold;
+}
 .jatekos-list {
     border: 1px solid #ccc;
     padding: 10px;

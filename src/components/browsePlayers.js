@@ -43,18 +43,19 @@ export const Jatekosok = () => {
 
 
     const navigateToProfil = () => {
-        navigate("/checkProfile");
+        navigate("/profil");
     };
 
     const navigateToDetails = (userId) => {
         navigate(`/reszletek/${userId}`);
 
     };
-
-
     const navigateToPlayers = () => {
         navigate("/jatekosok");
     };
+    const navigateToClubs = () =>{
+        navigate(`/klubbok`);
+    }
 
     const logOut = async () => {
         const confirmed = window.confirm("Biztosan ki szeretnél lépni?");
@@ -77,6 +78,7 @@ export const Jatekosok = () => {
                 <button className="profilbutton" onClick={navigateToProfil}>
                     Profil
                 </button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
                 <button className="logOut" onClick={logOut}>
                     Kilépés
                 </button>

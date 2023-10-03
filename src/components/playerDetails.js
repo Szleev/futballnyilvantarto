@@ -34,12 +34,15 @@ const PlayerDetails = () => {
     }, [playerId, navigate]);
 
     const navigateToProfil = () => {
-        navigate("/checkProfile");
+        navigate("/profil");
     };
 
     const navigateToPlayers = () => {
         navigate("/jatekosok");
     };
+    const navigateToClubs = () =>{
+        navigate(`/klubbok`);
+    }
 
     const logOut = async () => {
         const confirmed = window.confirm("Biztosan ki szeretnél lépni?");
@@ -62,6 +65,7 @@ const PlayerDetails = () => {
                 <button className="profilbutton" onClick={navigateToProfil}>
                     Profil
                 </button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
                 <button className="logOut" onClick={logOut}>
                     Kilépés
                 </button>

@@ -9,6 +9,33 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+.adatok-header{
+    background-color: #f4f4f4;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    color: #097F26;
+
+}
+.edit-input-container{
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+.edit-input-container input{
+    margin-bottom: 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 16px;
+    color: #333;
+    width: 250px;
+}
 
 
 

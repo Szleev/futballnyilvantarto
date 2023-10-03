@@ -1,78 +1,71 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams  } from 'react-router-dom';
-import { doc, updateDoc, getDoc } from "firebase/firestore";
-import { auth, database } from "../config/firebase-config";
+import { useNavigate, useParams } from 'react-router-dom';
+import {doc, updateDoc, getDocs, query, where, collection, deleteDoc} from "firebase/firestore";
+import { auth, database, storage } from "../config/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll, deleteObject } from "firebase/storage";
 import '../component_css/Szerkesztes.css';
-import transition from "../transition";
-
+import { v4 } from 'uuid'
 
 export const Szerkesztes = () => {
 
     const navigate = useNavigate();
     const auth = getAuth();
     const { userId } = useParams();
-    const [userData, setUserData] = useState(null);
+    const [jatekosLista, setJatekosLista] = useState([]);
+
+
+    const [profilkepUrl, setProfilkepUrl] = useState("");
+    const [profilkepFile, setProfilkepFile] = useState(null);
+
+
+    const [jatekosDocId, setJatekosDocId] = useState("");
+    const [jatekosData, setJatekosData] = useState({
+        Vezeteknev: "",
+        Keresztnev: "",
+        Szul_hely_irszam: 0,
+        Szul_hely: "",
+        Szul_ev: 0,
+        Magassag: 0,
+        Suly: 0,
+        Nemzetiség: "",
+        Poszt: "",
+        Email: "",
+        Telefonszam: "",
+    });
 
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                if (userId) {
-                    const userDocRef = doc(database, "Játékosok", userId);
-                    const userDocSnap = await getDoc(userDocRef);
-
-                    if (userDocSnap.exists()) {
-                        const userData = userDocSnap.data();
-                        setUserData(userData);
-                    } else {
-                        console.log("A felhasználó dokumentuma nem található.");
-                    }
-                } else {
-                    console.log("Nincs felhasználói azonosító.");
+                const q = query(collection(database, "Játékosok"), where("userId", "==", userId));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    const docSnapshot = querySnapshot.docs[0];
+                    setJatekosDocId(docSnapshot.id);
+                    setJatekosData(docSnapshot.data());
+                    setProfilkepUrl(docSnapshot.data().ProfilkepUrl);
                 }
-            } catch (error) {
-                console.error("Hiba a felhasználó adatok lekérdezése közben:", error);
+            } catch (err) {
+                console.error(err);
             }
         };
+
 
         fetchUserData();
     }, [userId]);
 
-    const handleInputChange = (fieldName, value) => {
-
-        const updatedUserData = { ...userData };
-        updatedUserData[fieldName] = value;
-
-        setUserData(updatedUserData);
-    };
-
-    const saveChanges = async () => {
-        try {
-            const userDocRef = doc(database, "Játékosok", userId);
-            const docSnapshot = await getDoc(userDocRef);
-
-            if (docSnapshot.exists()) {
-                await updateDoc(userDocRef, userData);
-                alert("A változtatások el lettek mentve!");
-            } else {
-                alert("A felhasználói adatok nem találhatók!");
-            }
-        } catch (error) {
-            console.error("Hiba a változtatások mentése közben:", error);
-            alert("Hiba történt a változtatások mentése közben.");
-        }
-    };
-
-
-
     const navigateToProfil = () => {
-        navigate('/checkProfile');
+        navigate('/profil');
     };
 
     const navigateToPlayers = () => {
         navigate('/jatekosok');
     };
+
+    const navigateToClubs = () =>{
+        navigate(`/klubbok`);
+    }
 
     const logOut = async () => {
         const confirmed = window.confirm('Biztosan ki szeretnél lépni?');
@@ -86,40 +79,167 @@ export const Szerkesztes = () => {
         }
     };
 
+
+    const saveChanges = async (e) => {
+        e.preventDefault();
+        const confirmed = window.confirm('Biztosan mented az adatokat?');
+        if (confirmed) {
+            try {
+                if (profilkepFile) {
+                    const storageRef = ref(getStorage(), `Jatekos_profil_kepek/${userId}/${v4()}`);
+                    await uploadBytes(storageRef, profilkepFile);
+
+                    const downloadURL = await getDownloadURL(storageRef);
+                    console.log(downloadURL)
+                    setProfilkepUrl(downloadURL);
+                    setJatekosData({ ...jatekosData, ProfilkepUrl: downloadURL });
+                    console.log(downloadURL);
+                }
+
+                const jatekosDocRef = doc(database, "Játékosok", jatekosDocId);
+                await updateDoc(jatekosDocRef, jatekosData);
+                navigate('/profil');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        console.log(profilkepFile);
+
+    };
+
     return (
         <div className="editPlayer-container">
             <div className="navigation-bar">
                 <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
                 <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <h1>Adatok szerkesztése</h1>
-            {userData ? (
-                <>
-                    <div>
-                        <label>Vezetéknév:</label>
-                        <input
-                            type="text"
-                            value={userData.Vezeteknev}
-                            onChange={(e) => handleInputChange("vezeteknev", e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label>Keresztnév:</label>
-                        <input
-                            type="text"
-                            value={userData.Keresztnev}
-                            onChange={(e) => handleInputChange("keresztnev", e.target.value)}
-                        />
-                    </div>
-                    <button onClick={saveChanges}>Mentés</button>
-                </>
-            ) : (
-                <p>Betöltés...</p>
-            )}
+            <h1 className="adatok-header">Adatok szerkesztése</h1>
+            <img src={profilkepUrl} alt="Profilkép" />
+            <div className="edit-input-container">
+                <form onSubmit={saveChanges}>
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><label>Vezetéknév:</label></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    value={jatekosData.Vezeteknev}
+                                    onChange={(e) =>
+                                        setJatekosData({ ...jatekosData, Vezeteknev: e.target.value })
+                                    }
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Keresztnév:</label></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    value={jatekosData.Keresztnev}
+                                    onChange={(e) =>
+                                        setJatekosData({ ...jatekosData, Keresztnev: e.target.value })
+                                    }
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>E-mail cím:</label></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    value={jatekosData.Email}
+                                    onChange={(e) =>
+                                        setJatekosData({ ...jatekosData, Email: e.target.value })
+                                    }
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Telefonszám:</label></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    value={jatekosData.Telefonszam}
+                                    onChange={(e) =>
+                                        setJatekosData({ ...jatekosData, Telefonszam: e.target.value })
+                                    }
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Magasság:</label></td>
+                            <td>
+                                <input
+                                    type="number"
+                                    value={jatekosData.Magassag}
+                                    onChange={(e) =>
+                                        setJatekosData({ ...jatekosData, Magassag: e.target.value })
+                                    }
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Súly:</label></td>
+                            <td>
+                                <input
+                                    type="number"
+                                    value={jatekosData.Suly}
+                                    onChange={(e) =>
+                                        setJatekosData({ ...jatekosData, Suly: e.target.value })
+                                    }
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Nemzetiség:</label></td>
+                            <td>
+                                <input
+                                    type="text"
+                                    value={jatekosData.Nemzetiség}
+                                    onChange={(e) =>
+                                        setJatekosData({ ...jatekosData, Nemzetiség: e.target.value })
+                                    }
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Poszt:</label></td>
+                            <td>
+                                <select className="dropDownMenu"
+                                    value={jatekosData.Poszt}
+                                    onChange={(e) =>
+                                        setJatekosData({ ...jatekosData, Poszt: e.target.value })
+                                    }
+                                >
+                                    <option value="">Válassz egy posztot...</option>
+                                    <option value="Kapus">Kapus</option>
+                                    <option value="Védő">Védő</option>
+                                    <option value="Középpályás">Középpályás</option>
+                                    <option value="Csatár">Csatár</option>
+                                    <option value="Támadó középpályás">Támadó középpályás</option>
+                                    <option value="Védekező középpályás">Védekező középpályás</option>
+                                    <option value="Szélső középpályás">Szélső középpályás</option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setProfilkepFile(e.target.files[0])}
+                    />
+                    <button type="submit">Mentés</button>
+                </form>
+            </div>
+            <div>
+            </div>
         </div>
-
     );
+
 }
 
 export default Szerkesztes;

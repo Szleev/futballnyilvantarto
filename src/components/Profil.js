@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {addDoc, collection, deleteDoc, doc, getDocs, updateDoc, query, where} from "firebase/firestore";
 import {auth, database, storage} from "../config/firebase-config";
 import {ref, uploadBytes, listAll, getDownloadURL, deleteObject} from "firebase/storage";
@@ -18,7 +18,7 @@ export const Profil = () =>{
 
     const navigate = useNavigate();
     const [jatekosLista, setJatekosLista] = useState([]);
-    const jatekosCollectionRef = collection(database,"Játékosok")
+    const jatekosCollectionRef = collection(database,"Játékosok");
     const user = auth.currentUser;
     const userId = user ? user.uid : null;
 
@@ -41,26 +41,15 @@ export const Profil = () =>{
 
         fetchJatekosLista();
     }, []);
-    const getJatekosLista = async () => {
-        try {
-            const data = await getDocs(jatekosCollectionRef);
-            const filteredData= data.docs.map((doc) => ({...doc.data(), id: doc.id}))
-            setJatekosLista(filteredData)
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     const navigateToProfil = () => {
-        navigate('/checkProfile');
+        navigate('/profil');
     };
     const navigateToPlayers = () => {
         navigate('/jatekosok');
     };
-    const navigateToEdit = (userId) =>{
-        navigate(`/szerkesztes/${userId}`);
+    const navigateToClubs = () =>{
+        navigate(`/klubbok`);
     }
-
 
     const logOut = async () => {
         const confirmed = window.confirm('Biztosan ki szeretnél lépni?');
@@ -73,27 +62,33 @@ export const Profil = () =>{
             }
         }
     };
-
-
-
-    const deleteJatekos = async (id, profilképUrl) => {
+    const deleteJatekos = async (id, profilkepUrl) => {
         const confirmed = window.confirm('Biztosan törlöd a profilod?');
         if (confirmed) {
             const jatekosDoc = doc(database, "Játékosok", id);
             try {
                 await deleteDoc(jatekosDoc);
-                if (profilképUrl) {
-                    const storageRef = ref(storage, profilképUrl);
-                    await deleteObject(storageRef);
+
+                if (profilkepUrl) {
+                    const user = auth.currentUser;
+                    if (user) {
+                        const userId = user.uid;
+                        // Töröljük a profilkép mappáját a Storage-ból
+                        const storageRef = ref(storage, `Jatekos_profil_kepek/${userId}`);
+                        const files = await listAll(storageRef);
+                        for (const file of files.items) {
+                            await deleteObject(file);
+                        }
+                    }
                 }
+
                 setJatekosLista((prevJatekosok) => prevJatekosok.filter(jatekos => jatekos.id !== id));
             } catch (err) {
                 console.error(err);
             }
-            navigate('/uploadData')
+            navigate('/uploadData');
         }
     };
-
 
 
     return(
@@ -101,6 +96,7 @@ export const Profil = () =>{
             <div className="navigation-bar">
                 <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
                 <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
             <div>
@@ -156,7 +152,7 @@ export const Profil = () =>{
                         <div className="updateData">
                             <button className="deleteButton" onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
                             <br/>
-                            <button className="editButton" onClick={() => navigateToEdit(userId)}>Szerkesztés</button>
+                            <button className="editButton" onClick={() => navigate(`/szerkesztes/${jatekos.userId}`)}>Szerkesztés</button>
                         </div>
 
                     </div>

@@ -1,5 +1,5 @@
 import {auth, googleprovider} from "../config/firebase-config";
-import {createUserWithEmailAndPassword, signInWithPopup} from 'firebase/auth'
+import {createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
 import {useState} from "react";
 import { BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ export const Auth = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const signIn = async () => {
+    const signUp = async () => {
         if (email.trim() === "" || password.trim() === "") {
             toast.error("Az e-mail és jelszó mezők kitöltése kötelező!", {
                 position: "top-center",
@@ -34,6 +34,26 @@ export const Auth = () => {
             }
         }
     };
+    const signInWithEmailAndPass = async () => {
+        if (email.trim() === "" || password.trim() === "") {
+            toast.error("Az e-mail és jelszó mezők kitöltése kötelező!", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } else {
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                navigate('/profil');
+            } catch (error) {
+                console.error("Hiba a belépés során:", error);
+            }
+        }
+    };
+
     const signInWithGoogle = async () => {
         try{
             await signInWithPopup(auth, googleprovider);
@@ -71,10 +91,10 @@ export const Auth = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                        <button className="login-button" onClick={signIn}>Belépés</button>
+                        <button className="register-button" onClick={signUp}>Regisztráció</button>
 
                         <button className="button google-button" onClick={signInWithGoogle}>Belépés Google fiókkal</button>
-                        <button>Regisztráció</button>
+                        <button className="login-button" onClick={signInWithEmailAndPass}>Belépés</button>
                     </div>
                 </div>
             </section>

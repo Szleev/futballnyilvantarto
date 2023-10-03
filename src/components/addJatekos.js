@@ -179,13 +179,17 @@ export const AddJatekos = () => {
         navigate('/checkProfile');
     };
     const navigateToPlayers = () => {
-        navigate('/jatekosok');
+        navigate('/checkProfile');
     };
+    const navigateToClubs = () =>{
+        navigate(`/checkProfile`);
+    }
     return (
         <div className="data-container">
             <div className="navigation-bar">
                 <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
                 <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
             <h1 className="profileh1">Regisztrálja adatait!</h1>
@@ -212,8 +216,6 @@ export const AddJatekos = () => {
             </select>
         </div>
 
-
-
     <div className="image-container">
                 <h2>Profilkép feltöltése</h2>
                 <input type="file" onChange={(e) => setImageUpload(e.target.files[0])} />
@@ -223,7 +225,9 @@ export const AddJatekos = () => {
                 )}
             </div>
             <button className="save" onClick={adatokBeadasa}>Adatok mentése</button>
-
+            <button className="profilbutton" onClick={() => navigate("/addKlub")}>
+                Klub regisztráció
+            </button>
         </div>
 );
 }

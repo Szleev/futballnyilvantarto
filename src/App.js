@@ -9,7 +9,7 @@ import { Szerkesztes } from "./components/Szerkesztes";
 import {AnimatePresence} from "framer-motion"
 import PlayerDetails from "./components/playerDetails";
 import Klubbok from "./components/Klubbok";
-import AddKlub from "./components/AddKlub";
+import AddKlub from "./components/addKlub";
 
 function App() {
     return (
@@ -24,8 +24,7 @@ function App() {
                 <Route path="/szerkesztes/:userId" element={<Szerkesztes />} />
                 <Route path="/reszletek/:playerId" element={<PlayerDetails />} />
                 <Route path="/klubbok" element={<Klubbok />} />
-                <Route path="/addKlub" element={<AddKlub isClub={true} />} />
-                <Route path="/addJatekos" element={<AddKlub isClub={false} />} />
+                <Route path="/addKlub" element={<AddKlub />} />
             </Routes>
         </Router>
 

@@ -13,9 +13,6 @@ export const Szerkesztes = () => {
     const auth = getAuth();
     const { userId } = useParams();
     const [jatekosLista, setJatekosLista] = useState([]);
-
-
-    const [profilkepUrl, setProfilkepUrl] = useState("");
     const [profilkepFile, setProfilkepFile] = useState(null);
 
 
@@ -33,6 +30,9 @@ export const Szerkesztes = () => {
         Email: "",
         Telefonszam: "",
     });
+
+    const [profilkepUrl, setProfilkepUrl] = useState("");
+
 
 
     useEffect(() => {
@@ -82,30 +82,24 @@ export const Szerkesztes = () => {
 
     const saveChanges = async (e) => {
         e.preventDefault();
-        const confirmed = window.confirm('Biztosan mented az adatokat?');
-        if (confirmed) {
-            try {
-                if (profilkepFile) {
-                    const storageRef = ref(getStorage(), `Jatekos_profil_kepek/${userId}/${v4()}`);
-                    await uploadBytes(storageRef, profilkepFile);
-
-                    const downloadURL = await getDownloadURL(storageRef);
-                    console.log(downloadURL)
-                    setProfilkepUrl(downloadURL);
-                    setJatekosData({ ...jatekosData, ProfilkepUrl: downloadURL });
-                    console.log(downloadURL);
-                }
-
-                const jatekosDocRef = doc(database, "Játékosok", jatekosDocId);
-                await updateDoc(jatekosDocRef, jatekosData);
-                navigate('/profil');
-            } catch (err) {
-                console.error(err);
+        try {
+            if (profilkepFile) {
+                const storageRef = ref(getStorage(), `Jatekos_profil_kepek/${userId}/${v4()}`);
+                await uploadBytes(storageRef, profilkepFile);
+                const downloadURL = await getDownloadURL(storageRef);
+                setProfilkepUrl(downloadURL);
+                setJatekosData({ ...jatekosData, ProfilkepUrl: downloadURL });
             }
+            const jatekosDocRef = doc(database, "Játékosok", jatekosDocId);
+            await updateDoc(jatekosDocRef, jatekosData);
+            navigate('/profil');
+        } catch (err) {
+            console.error(err);
         }
-        console.log(profilkepFile);
-
     };
+
+
+
 
     return (
         <div className="editPlayer-container">
@@ -118,7 +112,7 @@ export const Szerkesztes = () => {
             <h1 className="adatok-header">Adatok szerkesztése</h1>
             <img src={profilkepUrl} alt="Profilkép" />
             <div className="edit-input-container">
-                <form onSubmit={saveChanges}>
+                <form onSubmit={saveChanges} encType="multipart/form-data">
                     <table>
                         <tbody>
                         <tr>

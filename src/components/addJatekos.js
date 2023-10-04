@@ -184,6 +184,9 @@ export const AddJatekos = () => {
     const navigateToClubs = () =>{
         navigate(`/checkProfile`);
     }
+    const navigateToAddClub = () =>{
+        navigate(`/addKlub`);
+    }
     return (
         <div className="data-container">
             <div className="navigation-bar">
@@ -224,10 +227,8 @@ export const AddJatekos = () => {
                     <p className="success-message fade-out">Sikeres feltöltés</p>
                 )}
             </div>
+            <button onClick={navigateToAddClub}>Klub regisztrálás</button>
             <button className="save" onClick={adatokBeadasa}>Adatok mentése</button>
-            <button className="profilbutton" onClick={() => navigate("/addKlub")}>
-                Klub regisztráció
-            </button>
         </div>
 );
 }

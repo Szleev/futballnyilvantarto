@@ -53,7 +53,10 @@ const EditKlub = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        const confirmed = window.confirm("Biztosan menteni szeretnéd a változásokat?");
+        if (!confirmed) {
+            return;
+        }
         try {
             const auth = getAuth();
             const user = auth.currentUser;
@@ -70,7 +73,6 @@ const EditKlub = () => {
                 const klubDoc = klubDocs.docs[0];
                 const klubDocId = klubDoc.id;
 
-                // Kép feltöltése a megfelelő mappába
                 const storageRef = ref(storage, `Klub_kepek/${user.uid}`);
                 const imageRef = ref(storageRef, `${klubDocId}_profile_image`);
 
@@ -84,7 +86,7 @@ const EditKlub = () => {
                 const updatedKlubRef = doc(database, 'Klubok', klubDocId);
                 await updateDoc(updatedKlubRef, klubData);
                 console.log('Klub adatai sikeresen frissítve.');
-                navigate('/checkProfile');
+                navigate('/klubprofil');
             } else {
                 console.error('Klub nem található.');
             }
@@ -126,12 +128,20 @@ const EditKlub = () => {
                 <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <div>
-                <h2>Klub adatainak szerkesztése</h2>
-
+            <h1 className="profileh1">Klub adatainak szerkesztése</h1>
+            {klubData.KepUrl && (
+                <div className="klub-edit-image-container">
+                    <img
+                        src={klubData.KepUrl}
+                        alt="Profilkép"
+                        className="profile-image"
+                    />
+                </div>
+            )}
+            <div className="edit-klub-input-container">
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="Nev">Klub neve:</label>
+                        <label htmlFor="Nev">Klub neve: </label>
                         <input
                             type="text"
                             id="Nev"
@@ -142,7 +152,6 @@ const EditKlub = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="KepUrl">Profilkép kiválasztása:</label>
                         <input
                             type="file"
                             id="KepUrl"

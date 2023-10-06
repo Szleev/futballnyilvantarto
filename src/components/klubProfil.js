@@ -126,10 +126,12 @@ export const KlubProfil = () => {
                                 </tr>
                                 </tbody>
                             </table>
-                            <Link to={`/editklub/${klubData.KlubId}`}>
-                                <button type="button">Szerkesztés</button>
-                            </Link>
-                            <button onClick={deleteKlub}>Klub törlése</button>
+                            <div className="button-container">
+                                <Link to={`/editklub/${klubData.KlubId}`}>
+                                    <button type="button">Szerkesztés</button>
+                                </Link>
+                                <button onClick={deleteKlub}>Klub törlése</button>
+                            </div>
                         </div>
                     </div>
                 ) : (

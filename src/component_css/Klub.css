@@ -9,3 +9,15 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+.klub-card-profilkep{
+    width: 200px;
+    height: 200px;
+}
+.klub-list{
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    text-align: center;
+}

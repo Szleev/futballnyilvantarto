@@ -9,3 +9,39 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+.klub-edit-image-container{
+    margin-bottom: 20px;
+}
+.edit-klub-input-container{
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+
+}
+.edit-klub-input-container button{
+    width: 100px;
+    height: 30px;
+    font-size: 14px;
+}
+.edit-klub-input-container label{
+    font-weight: bold;
+    margin-right: 10px;
+}
+.edit-klub-input-container input{
+    margin-bottom: 10px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 16px;
+    color: #333;
+    width: 250px;
+
+}
+.klubh1{
+    font-size: 16px;
+}

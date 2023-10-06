@@ -1,68 +1,104 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-    addDoc,
-    collection,
-    getDocs,
-    updateDoc,
-    deleteDoc,
-    doc,
-} from "firebase/firestore";
-import { getAuth, signOut } from "firebase/auth";
-import { database, storage } from "../config/firebase-config";
-import { v4 as uuidv4 } from 'uuid';
+import React, {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
+import { addDoc, collection } from "firebase/firestore";
+import {ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from 'uuid';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import '../component_css/addKlub.css';
-import { getStorage, ref } from 'firebase/storage';
-
+import {auth, database, storage} from "../config/firebase-config";
 
 export const AddKlub = () => {
-    const [klubNev, setKlubNev] = useState("");
-    const [klubID, setKlubID] = useState(uuidv4());
-    const [isClub, setIsClub] = useState(true);
-    const [klubKepUrl, setKlubKepUrl] = useState(null);
     const navigate = useNavigate();
     const auth = getAuth();
+    const authUser = auth.currentUser;
+
+    const [klubNev, setKlubNev] = useState("");
+    const [klubKepUpload, setKlubKepUpload] = useState(null);
+    const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [klubKepUrl, setKlubKepUrl] = useState("");
+
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+
 
     const klubokCollectionRef = collection(database, "Klubok");
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setIsUserLoggedIn(true);
+            } else {
+                setIsUserLoggedIn(false);
+            }
+        });
+
+        return () => unsubscribe();
+    }, [auth]);
+
+
+    const uploadKlubKep = async () => {
+        if (!klubKepUpload) {
+            alert('Válassz ki egy klubképet a feltöltéshez!');
+            return;
+        }
+
+        const user = auth.currentUser;
+
+        if (!user) {
+            console.error('Nincs bejelentkezett felhasználó.');
+            return;
+        }
+
+        const fileFolderRef = ref(
+            storage,
+            `Klub_kepek/${user.uid}/${klubKepUpload.name + v4()}`
+        );
+
+        try {
+            const snapshot = await uploadBytes(fileFolderRef, klubKepUpload);
+            const klubKepUrl = await getDownloadURL(snapshot.ref);
+
+            setIsUploadSuccess(true);
+            setTimeout(() => {
+                setIsUploadSuccess(false);
+            }, 3000);
+
+            setKlubKepUrl(klubKepUrl);
+
+            setShowSuccessMessage(true);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     const adatokBeadasa = async () => {
-        if (klubNev) {
-            const confirmed = window.confirm("Biztosan mented az adatokat?");
+        if (!isUserLoggedIn) {
+            alert("A klub létrehozásához be kell jelentkezned!");
+            return;
+        }
+        if (klubNev && klubKepUrl) {
+            const confirmed = window.confirm('Biztosan mented az adatokat?');
             if (confirmed) {
                 try {
+
                     const klubData = {
-                        KlubNev: klubNev,
-                        KlubID: klubID,
-                        IsClub: isClub,
-                        KlubKepUrl: klubKepUrl,
+                        KlubId: authUser.uid,
+                        Nev: klubNev,
+                        KepUrl: klubKepUrl,
+                        IsClub: true,
+                        LeigazoltJatekosokSzama: 0,
                     };
 
-                    // Létrehozás előtt ellenőrizd, hogy a tábla és a mappa létezik-e
-                    const klubTableRef = collection(database, "Klubok");
-                    const klubKepFolderRef = storage.ref(`Klub_kepek/${klubNev}/`);
+                    await addDoc(klubokCollectionRef, klubData);
 
-                    // Ellenőrizd, hogy a tábla nem létezik-e, és csak akkor hozd létre, ha nem
-                    const klubTableExists = await getDocs(klubTableRef).then((snapshot) => !snapshot.empty);
-                    if (!klubTableExists) {
-                        await addDoc(klubTableRef, {}); // Üres dokumentum hozzáadása a táblához
-                    }
-
-                    // Ellenőrizd, hogy a mappa nem létezik-e, és csak akkor hozd létre, ha nem
-                    const klubKepFolderExists = await klubKepFolderRef.listAll()
-                        .then((items) => items.length > 0);
-                    if (!klubKepFolderExists) {
-                        await klubKepFolderRef.child("placeholder").put(""); // Üres fájl feltöltése a mappa létrehozásához
-                    }
-
-                    // Adatok hozzáadása a táblához
-                    await addDoc(klubTableRef, klubData);
-                    //navigate("/profil");
+                    navigate('/klubprofil');
                 } catch (err) {
                     console.error(err);
                 }
             }
         } else {
-            alert("Minden mezőt ki kell tölteni!");
+            alert('Minden mezőt ki kell tölteni, és egy klubképet is fel kell tölteni!');
         }
     };
 
@@ -71,7 +107,6 @@ export const AddKlub = () => {
         const confirmed = window.confirm("Biztosan ki szeretnél lépni?");
         if (confirmed) {
             try {
-                await signOut(auth);
                 navigate("/");
             } catch (err) {
                 console.error(err);
@@ -79,30 +114,6 @@ export const AddKlub = () => {
         }
     };
 
-    const uploadKlubKep = async (file) => {
-        if (!file) {
-            alert("Válassz ki egy fájlt a feltöltéshez!");
-            return;
-        }
-
-        const user = auth.currentUser;
-
-        if (!user) {
-            console.error("Nincs bejelentkezett felhasználó.");
-            return;
-        }
-
-        const klubKepFolderRef = storage.ref(`Klub_kepek/${klubNev}/`);
-
-        try {
-            const snapshot = await klubKepFolderRef.child(file.name).put(file);
-            const url = await snapshot.ref.getDownloadURL();
-
-            setKlubKepUrl(url);
-        } catch (err) {
-            console.error(err);
-        }
-    };
     const navigateToProfil = () => {
         navigate('/profil');
     };
@@ -124,22 +135,21 @@ export const AddKlub = () => {
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
             <h1 className="profileh1">Regisztrálja a klub adatait!</h1>
-            <div className="input-container">
-                <input
-                    placeholder="Klubnév..."
-                    onChange={(e) => setKlubNev(e.target.value)}
-                    required
-                />
-                <input
-                    type="file"
-                    onChange={(e) => uploadKlubKep(e.target.files[0])}
-                    required
-                />
+            <div className="addKlub-container">
+                <div className="klub-input-container">
+                    <input placeholder="Klubnév..." onChange={(e) => setKlubNev(e.target.value)} required />
+                </div>
+                <div className="klub-image-container">
+                    <h2>Klubkép feltöltése</h2>
+                    <input type="file" onChange={(e) => setKlubKepUpload(e.target.files[0])} />
+                    <button onClick={uploadKlubKep}>Fájl feltöltése</button>
+                    {isUploadSuccess && (
+                        <p className="klub-success-message fade-out">Sikeres feltöltés</p>
+                    )}
+                </div>
             </div>
 
-            <button className="save" onClick={adatokBeadasa}>
-                Adatok mentése
-            </button>
+            <button className="klub-save" onClick={adatokBeadasa}>Adatok mentése</button>
         </div>
     );
 };

@@ -10,6 +10,8 @@ import {AnimatePresence} from "framer-motion"
 import PlayerDetails from "./components/playerDetails";
 import Klubbok from "./components/Klubbok";
 import AddKlub from "./components/addKlub";
+import KlubProfil from "./components/klubProfil";
+import EditKlub from "./components/EditKlub";
 
 function App() {
     return (
@@ -25,6 +27,9 @@ function App() {
                 <Route path="/reszletek/:playerId" element={<PlayerDetails />} />
                 <Route path="/klubbok" element={<Klubbok />} />
                 <Route path="/addKlub" element={<AddKlub />} />
+                <Route path="/klubprofil" element={<KlubProfil />} />
+                <Route path="/editklub/:KlubId" element={<EditKlub />} />
+
             </Routes>
         </Router>
 

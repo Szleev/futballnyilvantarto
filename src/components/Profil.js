@@ -22,6 +22,8 @@ export const Profil = () =>{
     const user = auth.currentUser;
     const userId = user ? user.uid : null;
 
+    const [isClub, setIsClub] = useState(false);
+
     useEffect(() => {
         const fetchJatekosLista = async () => {
             try {
@@ -73,7 +75,6 @@ export const Profil = () =>{
                     const user = auth.currentUser;
                     if (user) {
                         const userId = user.uid;
-                        // Töröljük a profilkép mappáját a Storage-ból
                         const storageRef = ref(storage, `Jatekos_profil_kepek/${userId}`);
                         const files = await listAll(storageRef);
                         for (const file of files.items) {
@@ -105,54 +106,64 @@ export const Profil = () =>{
                         <div className="profilkep">
                             <img src={jatekos.ProfilkepUrl} alt={`${jatekos.Vezeteknev} ${jatekos.Keresztnev} profilkép`} />
                         </div>
-                        <table className="adatTable">
-                            <tbody>
-                            <tr>
-                                <td><h2>Név:</h2></td>
-                                <td><p>{jatekos.Vezeteknev} {jatekos.Keresztnev}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>E-mail:</h2></td>
-                                <td><p>{jatekos.Email}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Telefonszám:</h2></td>
-                                <td><p>{jatekos.Telefonszam}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Születési hely:</h2></td>
-                                <td><p>{jatekos.Szul_hely_irszam}, {jatekos.Szul_hely}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Születési év:</h2></td>
-                                <td><p>{jatekos.Szul_ev}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Magasság:</h2></td>
-                                <td><p>{jatekos.Magassag}cm</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Súly:</h2></td>
-                                <td><p>{jatekos.Suly}kg</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Nemzetiség:</h2></td>
-                                <td><p>{jatekos.Nemzetiség}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Poszt:</h2></td>
-                                <td><p>{jatekos.Poszt}</p></td>
-                            </tr>
-                            <tr>
-                                <td><h2>Egyéni profil azonosító:</h2></td>
-                                <td><p>{jatekos.userId}</p></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div className="updateData">
-                            <button className="deleteButton" onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
-                            <br/>
-                            <button className="editButton" onClick={() => navigate(`/szerkesztes/${jatekos.userId}`)}>Szerkesztés</button>
+                        <div>
+                            {isClub ? (
+                                <div className="club-data">
+
+                                </div>
+                            ) : (
+                                <div className="jatekos-data">
+                                    <table className="adatTable">
+                                        <tbody>
+                                        <tr>
+                                            <td><h2>Név:</h2></td>
+                                            <td><p>{jatekos.Vezeteknev} {jatekos.Keresztnev}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>E-mail:</h2></td>
+                                            <td><p>{jatekos.Email}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>Telefonszám:</h2></td>
+                                            <td><p>{jatekos.Telefonszam}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>Születési hely:</h2></td>
+                                            <td><p>{jatekos.Szul_hely_irszam}, {jatekos.Szul_hely}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>Születési év:</h2></td>
+                                            <td><p>{jatekos.Szul_ev}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>Magasság:</h2></td>
+                                            <td><p>{jatekos.Magassag}cm</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>Súly:</h2></td>
+                                            <td><p>{jatekos.Suly}kg</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>Nemzetiség:</h2></td>
+                                            <td><p>{jatekos.Nemzetiség}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>Poszt:</h2></td>
+                                            <td><p>{jatekos.Poszt}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><h2>Egyéni profil azonosító:</h2></td>
+                                            <td><p>{jatekos.userId}</p></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div className="updateData">
+                                        <button className="deleteButton" onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
+                                        <br/>
+                                        <button className="editButton" onClick={() => navigate(`/szerkesztes/${jatekos.userId}`)}>Szerkesztés</button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                     </div>

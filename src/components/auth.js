@@ -47,7 +47,7 @@ export const Auth = () => {
         } else {
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                navigate('/profil');
+                navigate('/checkProfile');
             } catch (error) {
                 console.error("Hiba a belépés során:", error);
             }

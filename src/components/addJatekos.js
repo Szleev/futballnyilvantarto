@@ -146,7 +146,8 @@ export const AddJatekos = () => {
                             Email: ujEmail,
                             Telefonszam: ujTelefonszam,
                             userId: auth?.currentUser.uid,
-                            ProfilkepUrl: imageList[0]
+                            ProfilkepUrl: imageList[0],
+                            IsClub: false,
                         };
 
                         await addDoc(jatekosCollectionRef, jatekosData);

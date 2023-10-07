@@ -10,8 +10,11 @@ export const KlubProfil = () => {
 
     const [klubData, setKlubData] = useState(null);
 
+
+
     useEffect(() => {
         const user = auth.currentUser;
+
         if (!user) {
             console.error('Nincs bejelentkezett felhasználó.');
             return;

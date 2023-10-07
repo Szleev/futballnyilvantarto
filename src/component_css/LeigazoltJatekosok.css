@@ -1,0 +1,44 @@
+.leigazolt-jatekosok-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-image: url("/public/websitebg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.leigazolt-jatekosok-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.jatekos-table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #c0b7b7;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.jatekos-table th, .jatekos-table td {
+    padding: 10px;
+}
+
+.jatekos-table th {
+    background-color: white;
+    font-weight: bold;
+    text-align: center;
+}
+.jatekos-table td{
+    text-align: center;
+    font-weight: normal;
+}
+.jatekos-card-profilkep {
+    max-width: 100px;
+    max-height: 100px;
+    display: block;
+    margin: 0 auto;
+}

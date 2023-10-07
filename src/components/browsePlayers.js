@@ -20,8 +20,17 @@ export const Jatekosok = () => {
                 const jatekosSnapshot = await getDocs(jatekosCollectionRef);
                 const jatekosokData = [];
 
+                const leigazolasokCollectionRef = collection(database, "Leigazolasok");
+                const leigazolasokSnapshot = await getDocs(leigazolasokCollectionRef);
+
+                const leigazoltUserIds = leigazolasokSnapshot.docs.map((doc) => doc.data().userId);
+
                 jatekosSnapshot.forEach((doc) => {
-                    jatekosokData.push(doc.data());
+                    const jatekosData = doc.data();
+
+                    if (!leigazoltUserIds.includes(jatekosData.userId)) {
+                        jatekosokData.push(jatekosData);
+                    }
                 });
 
                 setJatekosok(jatekosokData);

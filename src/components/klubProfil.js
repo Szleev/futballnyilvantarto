@@ -130,6 +130,9 @@ export const KlubProfil = () => {
                                 <Link to={`/editklub/${klubData.KlubId}`}>
                                     <button type="button">Szerkesztés</button>
                                 </Link>
+                                <Link to={`/igazolasok/${klubData.KlubId}`}>
+                                    <button type="button">Leigazolt játékosok</button>
+                                </Link>
                                 <button onClick={deleteKlub}>Klub törlése</button>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {collection, getDocs, getDoc, doc, where, query, addDoc} from "firebase/firestore";
+import {collection, getDocs, getDoc, doc, where, query, addDoc, FieldValue} from "firebase/firestore";
 import { auth, database } from "../config/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 import "../component_css/playerDetails.css";
@@ -19,7 +19,20 @@ const PlayerDetails = () => {
 
                 if (!querySnapshot.empty) {
                     const jatekosDoc = querySnapshot.docs[0];
-                    setSelectedPlayer(jatekosDoc.data());
+                    const jatekosData = jatekosDoc.data();
+
+                    if (auth.currentUser) {
+                        const klubCollectionRef = collection(database, "Klubok");
+                        const klubQuerySnapshot = await getDocs(query(klubCollectionRef, where("KlubId", "==", auth.currentUser.uid)));
+
+                        if (!klubQuerySnapshot.empty) {
+                            auth.currentUser.isClub = true;
+                        } else {
+                            auth.currentUser.isClub = false;
+                        }
+                    }
+
+                    setSelectedPlayer(jatekosData);
                 } else {
                     navigate('/jatekosok');
                 }
@@ -28,40 +41,29 @@ const PlayerDetails = () => {
             }
         };
 
-
-
         fetchPlayerDetails();
-    }, [playerId, navigate]);
+    }, [playerId, navigate, auth.currentUser]);
 
-    const handleLeigazolas = async () => {
-        const user = auth.currentUser;
-        if (!user) {
-            console.error('Felhasználó nincs bejelentkezve.');
-            return;
+
+
+    const handleTransfer = async () => {
+
+        if (auth.currentUser && auth.currentUser.isClub) {
+            try {
+                const leigazolasokCollectionRef = collection(database, "Leigazolasok");
+                await addDoc(leigazolasokCollectionRef, {
+                    KlubId: auth.currentUser.uid,
+                    userId: playerId,
+                    igazolasDatum: new Date().toUTCString(),
+                    poszt: selectedPlayer.Poszt,
+                });
+
+            } catch (error) {
+                console.error("Hiba történt a leigazolás során:", error);
+            }
+        } else {
         }
-
-        if (!user.IsClub) {
-            console.error('Nincs jogosultságod a leigazolásra.');
-            console.log(user.uid);
-            return;
-        }
-
-        try {
-            const igazolasRef = collection(database, 'Igazolt_jatekosok');
-            const igazolasData = {
-                klubId: user.uid,
-                jatekosId: selectedPlayer.userId
-            };
-
-            await addDoc(igazolasRef, igazolasData);
-            console.log('Leigazolás sikeresen rögzítve az adatbázisban.');
-        } catch (error) {
-            console.error('Hiba történt a leigazolás során:', error);
-        }
-        navigate('/jatekosok');
     };
-
-
 
     const navigateToProfil = () => {
         navigate("/profil");
@@ -146,13 +148,15 @@ const PlayerDetails = () => {
                             <td>{selectedPlayer.Poszt}</td>
                         </tr>
                     </table>
+                    {auth.currentUser && auth.currentUser.isClub && (
+                        <button className="transfer-button" onClick={handleTransfer}>
+                            Leigazolás
+                        </button>
+                    )}
                 </div>
             ) : (
                 <p className="loading">Betöltés...</p>
             )}
-            <button className="leigazolas-button" onClick={handleLeigazolas}>
-                Leigazolás
-            </button>
 
         </div>
     );

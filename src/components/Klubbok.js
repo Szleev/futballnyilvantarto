@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, where, query } from "firebase/firestore";
 import { auth, database } from "../config/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 import "../component_css/Klub.css";
 
 export const Klubbok = () => {
+
     const navigate = useNavigate();
     const [klubok, setKlubok] = useState([]);
+    const [klubokLeigazolasokSzama, setKlubokLeigazolasokSzama] = useState({});
 
     useEffect(() => {
         const fetchKlubok = async () => {
@@ -16,11 +18,19 @@ export const Klubbok = () => {
                 const klubokSnapshot = await getDocs(klubokCollectionRef);
                 const klubokData = [];
 
-                klubokSnapshot.forEach((doc) => {
-                    klubokData.push(doc.data());
-                });
+                const tempKlubokLeigazolasokSzama = {};
+
+                for (const klubDoc of klubokSnapshot.docs) {
+                    const klubData = klubDoc.data();
+                    klubokData.push(klubData);
+
+                    const leigazolasokQuery = query(collection(database, "Leigazolasok"), where("KlubId", "==", klubData.KlubId));
+                    const leigazolasokSnapshot = await getDocs(leigazolasokQuery);
+                    tempKlubokLeigazolasokSzama[klubData.KlubId] = leigazolasokSnapshot.size;
+                }
 
                 setKlubok(klubokData);
+                setKlubokLeigazolasokSzama(tempKlubokLeigazolasokSzama);
             } catch (error) {
                 console.error("Hiba a klubok lekérdezése közben:", error);
             }
@@ -32,9 +42,11 @@ export const Klubbok = () => {
     const navigateToProfil = () => {
         navigate("/profil");
     };
+
     const navigateToPlayers = () => {
         navigate("/jatekosok");
     };
+
     const navigateToClubs = () => {
         navigate(`/klubbok`);
     };
@@ -77,6 +89,8 @@ export const Klubbok = () => {
                             alt={klub.Nev}
                         />
                         <h2>{klub.Nev}</h2>
+                        {/* Megjelenítjük a leigazolt játékosok számát */}
+                        <p>Leigazolt játékosok: {klubokLeigazolasokSzama[klub.KlubId] || 0}</p>
                     </div>
                 ))}
             </div>

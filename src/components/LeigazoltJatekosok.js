@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import {Link, useNavigate, useParams} from 'react-router-dom';
-import {query, where, getDocs, collection, getDoc, doc} from "firebase/firestore";
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { query, where, getDocs, collection, doc, deleteDoc } from "firebase/firestore";
 import { auth, database, storage } from "../config/firebase-config";
 import '../component_css/LeigazoltJatekosok.css';
-import {deleteObject, listAll, ref} from "firebase/storage";
-import {getAuth} from "firebase/auth";
+import { deleteObject, listAll, ref } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 
 export const LeigazoltJatekosok = () => {
 
     const navigate = useNavigate();
-    const { KlubId } = useParams(); // A klub azonosítóját a URL-ből olvassuk ki
+    const { KlubId } = useParams();
 
-    const [leigazoltJatekosok, setLeigazoltJatekosok] = useState([]); // Állapot a leigazolt játékosok adatainak tárolásához
+    const [leigazoltJatekosok, setLeigazoltJatekosok] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,6 +57,28 @@ export const LeigazoltJatekosok = () => {
         fetchData();
     }, [KlubId]);
 
+    const handleElbocsajtas = async (jatekosId) => {
+        try {
+            // Az adott játékos törlése a Leigazolasok táblából
+            // Ehhez használhatod a Firestore 'deleteDoc' függvényét.
+            const leigazolasokCollectionRef = collection(database, "Leigazolasok");
+            const leigazolasokQuery = query(leigazolasokCollectionRef, where("userId", "==", jatekosId));
+            const leigazolasokSnapshot = await getDocs(leigazolasokQuery);
+
+            if (!leigazolasokSnapshot.empty) {
+                const leigazolasDoc = leigazolasokSnapshot.docs[0];
+                const leigazolasDocRef = doc(database, "Leigazolasok", leigazolasDoc.id);
+                await deleteDoc(leigazolasDocRef);
+            }
+
+            // Módosítsd az állapotot úgy, hogy eltávolítsd a játékost a listából
+            setLeigazoltJatekosok((prevJatekosok) => prevJatekosok.filter((jatekos) => jatekos.jatekosId !== jatekosId));
+
+        } catch (error) {
+            console.error('Hiba az elbocsátás közben:', error);
+        }
+    };
+
     const navigateToProfil = () => {
         navigate('/profil');
     };
@@ -96,12 +118,13 @@ export const LeigazoltJatekosok = () => {
                     <th>Név</th>
                     <th>Poszt</th>
                     <th>Igazolás dátuma</th>
+                    <th>Művelet</th>
                 </tr>
                 </thead>
                 <tbody>
                 {leigazoltJatekosok.length === 0 ? (
                     <tr>
-                        <td colSpan="4">Nincs leigazolt játékos a klubban.</td>
+                        <td colSpan="5">Nincs leigazolt játékos a klubban.</td>
                     </tr>
                 ) : (
                     leigazoltJatekosok.map((jatekos) => (
@@ -116,6 +139,11 @@ export const LeigazoltJatekosok = () => {
                             <td>{`${jatekos.vezeteknev} ${jatekos.keresztnev}`}</td>
                             <td>{jatekos.poszt}</td>
                             <td>{jatekos.igazolasDatum}</td>
+                            <td>
+                                <button onClick={() => handleElbocsajtas(jatekos.jatekosId)}>
+                                    Elbocsátás
+                                </button>
+                            </td>
                         </tr>
                     ))
                 )}
@@ -123,8 +151,6 @@ export const LeigazoltJatekosok = () => {
             </table>
         </div>
     );
-
-
 };
 
 export default LeigazoltJatekosok;

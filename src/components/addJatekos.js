@@ -191,6 +191,7 @@ export const AddJatekos = () => {
     return (
         <div className="data-container">
             <div className="navigation-bar">
+                <p className="szilny">Szabadon igazolható labdarúgókat nyilvántartó webes felület</p>
                 <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
                 <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
                 <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
@@ -218,18 +219,17 @@ export const AddJatekos = () => {
                 <option value="Védekező középpályás">Védekező középpályás</option>
                 <option value="Szélső középpályás">Szélső középpályás</option>
             </select>
-        </div>
-
-    <div className="image-container">
-                <h2>Profilkép feltöltése</h2>
-                <input type="file" onChange={(e) => setImageUpload(e.target.files[0])} />
-                <button onClick={uploadFile}>Fájl feltöltése</button>
-                {isUploadSuccess && (
-                    <p className="success-message fade-out">Sikeres feltöltés</p>
-                )}
+                    <h2>Profilkép feltöltése</h2>
+                    <input type="file" accept="image/*" onChange={(e) => setImageUpload(e.target.files[0])} />
+                    <button onClick={uploadFile}>Fájl feltöltése</button>
+                    {isUploadSuccess && (
+                        <p className="success-message fade-out">Sikeres feltöltés</p>
+                    )}
+                <button onClick={navigateToAddClub}>Klub regisztrálás</button>
+                <button className="save" onClick={adatokBeadasa}>Adatok mentése</button>
             </div>
-            <button onClick={navigateToAddClub}>Klub regisztrálás</button>
-            <button className="save" onClick={adatokBeadasa}>Adatok mentése</button>
+
+
         </div>
 );
 }

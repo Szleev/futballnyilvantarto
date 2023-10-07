@@ -14,6 +14,10 @@
     margin-top: 20px;
     width: 150px;
     height: 50px;
+    background-color: #07591b;
+}
+.save:hover{
+    background-color: #053810;
 }
 .success-message {
     transition: opacity 0.3s ease-in-out;
@@ -35,11 +39,13 @@
 }
 .profileh1{
     background-color: #f4f4f4;
+    position: fixed;
     padding: 8px;
     margin-bottom: 20px;
     border-radius: 10px;
-    color: #097F26;
-    margin-top: 60px;
+    color: #3d7710;
+    margin-top: 70px;
+    top: 0;
 }
 img{
     width: 300px;
@@ -63,14 +69,15 @@ img{
     flex-direction: column;
     align-items: center;
     background-color: #f4f4f4;
-    margin-bottom: 20px;
     padding: 10px;
     border-radius: 10px;
+    position: fixed;
+    margin-top: 120px;
+    width: 300px;
 }
 .input-container button{
     width: 200px;
     height: 30px;
-    margin-bottom: 20px;
 }
 .input-container input{
     margin-bottom: 10px;
@@ -85,39 +92,30 @@ img{
 input:hover, input:focus {
     border-color: #097F26;
 }
+.input-container h2{
+    color: #3d7710;
+}
 table{
     width: 100%;
 }
 
-.image-container{
-    background-color: #f4f4f4;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-
-}
-.image-container h2{
-    color: #097F26;
-    margin-bottom: 20px;
-}
-.image-container button{
-    width: 120px;
-    height: 30px;
-}
 .navigation-bar {
     position: fixed;
-    top: 0;
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
+    justify-content: center;
     width: 100%;
-    background-color: #097F26;
-    min-height: 30px;
-    align-items: center;
+    top: 0;
+    padding: 2px;
+    background-color: #2c2f2c;
     z-index: 1;
+}
+
+.szilny{
+    justify-content: flex-start;
+    margin-right: auto;
+    margin-left: 20px;
+    color: white;
+    font-weight: bold;
 }
 .navigation-bar button{
     margin-right: 10px;
@@ -125,12 +123,15 @@ table{
 .clubbutton, .profilbutton{
     max-width: 100px;
     max-height: 30px;
-    background-color: #57886c;
+    background-color: #747976;
 }
 .playersbutton{
     max-width: 200px;
     max-height: 30px;
-    background-color: #57886c;
+    background-color: #747976;
+}
+.playersbutton:hover, .clubbutton:hover, .profilbutton:hover{
+    background-color: #404240;
 }
 .logOut{
     max-width: 100px;
@@ -140,8 +141,8 @@ table{
     justify-content: center;
     border: none;
     cursor: pointer;
-    background-color: #EAA349;
+    background-color: #e06565;
 }
 .logOut:hover{
-    background-color: #BF8133;
+    background-color: #de3030;
 }

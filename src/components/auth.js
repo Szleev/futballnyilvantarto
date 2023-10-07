@@ -1,5 +1,5 @@
 import {auth, googleprovider} from "../config/firebase-config";
-import {createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
+import {createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword, getAuth, fetchSignInMethodsForEmail} from 'firebase/auth'
 import {useState} from "react";
 import { BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -10,9 +10,33 @@ import { initializeApp } from "firebase/app";
 
 
 export const Auth = () => {
+
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+
+    const checkEmailAvailability = async () => {
+        try {
+            const auth = getAuth();
+            const methods = await fetchSignInMethodsForEmail(auth, email);
+
+            if (methods && methods.length > 0) {
+                toast.error("Az e-mail cím már foglalt!", {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+            } else {
+                await signUp();
+            }
+        } catch (error) {
+            console.error("Hiba az e-mail cím ellenőrzése során:", error);
+        }
+    };
 
     const signUp = async () => {
         if (email.trim() === "" || password.trim() === "") {
@@ -88,7 +112,7 @@ export const Auth = () => {
                     <button className="login-button" onClick={signInWithEmailAndPass}>
                         Belépés
                     </button>
-                    <button className="register-button" onClick={signUp}>
+                    <button className="register-button" onClick={checkEmailAvailability}>
                         Regisztráció
                     </button>
                     <p>vagy</p>

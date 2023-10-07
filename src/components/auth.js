@@ -95,7 +95,6 @@ export const Auth = () => {
                 </div>
                 <div className="right-side">
                     <h2>Szabadon igazolható labdarúgókat nyilvántartó webes felület</h2>
-                    <h2>Üdvözöljük!</h2>
                     <input
                         className="input-field"
                         placeholder="E-mail..."

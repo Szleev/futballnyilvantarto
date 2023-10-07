@@ -19,21 +19,24 @@ h1, h2, h3, p, a {
     background-image: url("/public/websitebg.png");
     background-size: cover;
     background-repeat: no-repeat;
+    border: none;
     background-attachment: fixed;
 }
 .rounded-square {
-    width: 800px;
+    width: 45%;
     height: 600px;
-    background-color: #fff;
+    background-color: #ffffff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     display: flex;
     align-items: center;
+    border-radius: 20px;
+    border: none;
 }
 .rounded-square h2{
     font-size: 22px;
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 3em;
     color: #179638;
     font-family: 'Roboto', sans-serif;
     font-weight: normal;
@@ -47,6 +50,7 @@ h1, h2, h3, p, a {
     justify-content: flex-start;
     align-items: flex-start;
     margin-left: 0;
+    border: none;
 }
 
 .right-side {
@@ -77,7 +81,7 @@ h1, h2, h3, p, a {
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 10px;
-    width: 200px;
+    width: 15em;
 }
 
 button {
@@ -89,8 +93,8 @@ button {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     border-radius: 10px;
-    width: 220px;
-    height: 50px;
+    width: 15em;
+    height: 3em;
     font-size: 15px;
     font-weight: bold;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
@@ -104,8 +108,8 @@ button {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     border-radius: 10px;
-    width: 220px;
-    height: 50px;
+    width: 15em;
+    height: 3em;
     font-size: 15px;
     font-weight: bold;
     display: flex;

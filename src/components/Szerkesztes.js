@@ -82,6 +82,13 @@ export const Szerkesztes = () => {
 
     const saveChanges = async (e) => {
         e.preventDefault();
+
+        const confirmed = window.confirm('Biztos vagy benne, hogy el szeretnéd menteni a változásokat?');
+
+        if (!confirmed) {
+            return;
+        }
+
         try {
             if (profilkepFile) {
                 const storageRef = ref(getStorage(), `Jatekos_profil_kepek/${userId}/${v4()}`);
@@ -101,16 +108,17 @@ export const Szerkesztes = () => {
 
 
 
+
     return (
         <div className="editPlayer-container">
             <div className="navigation-bar">
+                <p className="szilny">Szabadon igazolható labdarúgókat nyilvántartó webes felület</p>
                 <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
                 <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
-                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubok</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <h1 className="adatok-header">Adatok szerkesztése</h1>
-            <img src={profilkepUrl} alt="Profilkép" />
+            <img className="editprofilkep" src={profilkepUrl} alt="Profilkép" />
             <div className="edit-input-container">
                 <form onSubmit={saveChanges} encType="multipart/form-data">
                     <table>
@@ -226,6 +234,7 @@ export const Szerkesztes = () => {
                         accept="image/*"
                         onChange={(e) => setProfilkepFile(e.target.files[0])}
                     />
+                    <br/>
                     <button type="submit">Mentés</button>
                 </form>
             </div>

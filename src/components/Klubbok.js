@@ -66,20 +66,13 @@ export const Klubbok = () => {
     return (
         <div className="klub-container">
             <div className="navigation-bar">
-                <button className="playersbutton" onClick={navigateToPlayers}>
-                    Igazolható játékosok
-                </button>
-                <button className="profilbutton" onClick={navigateToProfil}>
-                    Profil
-                </button>
-                <button className="profilbutton" onClick={navigateToClubs}>
-                    Klubbok
-                </button>
-                <button className="logOut" onClick={logOut}>
-                    Kilépés
-                </button>
+                <p className="szilny">Szabadon igazolható labdarúgókat nyilvántartó webes felület</p>
+                <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
+                <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubok</button>
+                <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <h1 className="profileh1">Klubbok</h1>
+            <h1 className="profileh1">Klubok</h1>
             <div className="klub-list">
                 {klubok.map((klub) => (
                     <div key={klub.KlubId} className="klub-card">
@@ -89,7 +82,6 @@ export const Klubbok = () => {
                             alt={klub.Nev}
                         />
                         <h2>{klub.Nev}</h2>
-                        {/* Megjelenítjük a leigazolt játékosok számát */}
                         <p>Leigazolt játékosok: {klubokLeigazolasokSzama[klub.KlubId] || 0}</p>
                     </div>
                 ))}

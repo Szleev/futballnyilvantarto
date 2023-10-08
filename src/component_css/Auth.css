@@ -34,7 +34,7 @@ h1, h2, h3, p, a {
     border: none;
 }
 .rounded-square h2{
-    font-size: 22px;
+    font-size: 20px;
     text-align: center;
     margin-bottom: 3em;
     color: #179638;
@@ -51,6 +51,8 @@ h1, h2, h3, p, a {
     align-items: flex-start;
     margin-left: 0;
     border: none;
+    height: 105%;
+    width: 105%;
 }
 
 .right-side {
@@ -64,11 +66,11 @@ h1, h2, h3, p, a {
 .loginpagebg {
     display: block;
     width: 100%;
-    height: auto;
+    height: 110%;
     border-radius: 0;
     margin-left: 0;
     padding: 0;
-    line-height: 0;
+
 }
 
 .rounded-square p{
@@ -137,4 +139,8 @@ button:hover {
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
+@media (min-width: 1200px), (min-width: 960px) and (-webkit-device-pixel-ratio: 1.25) {
+
+}
+
 

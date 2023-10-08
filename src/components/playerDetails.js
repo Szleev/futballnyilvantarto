@@ -47,6 +47,11 @@ const PlayerDetails = () => {
 
 
     const handleTransfer = async () => {
+        const confirmed = window.confirm('Biztos vagy benne, hogy le szeretnéd igazolni a játékost?');
+
+        if (!confirmed) {
+            return;
+        }
 
         if (auth.currentUser && auth.currentUser.isClub) {
             try {
@@ -63,7 +68,9 @@ const PlayerDetails = () => {
             }
         } else {
         }
+        navigate("/jatekosok");
     };
+
 
     const navigateToProfil = () => {
         navigate("/profil");
@@ -91,18 +98,13 @@ const PlayerDetails = () => {
     return (
         <div className="player-details-container">
             <div className="navigation-bar">
-                <button className="playersbutton" onClick={navigateToPlayers}>
-                    Igazolható játékosok
-                </button>
-                <button className="profilbutton" onClick={navigateToProfil}>
-                    Profil
-                </button>
-                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
-                <button className="logOut" onClick={logOut}>
-                    Kilépés
-                </button>
+                <p className="szilny">Szabadon igazolható labdarúgókat nyilvántartó webes felület</p>
+                <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
+                <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubok</button>
+                <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <h1 className="detail-header">Játékos részletei</h1>
+            <h1 className="profileh1">Játékos részletei</h1>
             {selectedPlayer ? (
                 <div className="detail-div">
                     <img

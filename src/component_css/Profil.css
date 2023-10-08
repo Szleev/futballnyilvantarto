@@ -15,10 +15,6 @@
 .profilkep{
     text-align: center;
 }
-.profilkep img{
-    width: 200px;
-    height: 200px;
-}
 .adatok-container {
     background-color: #f4f4f4;
     padding: 20px;
@@ -27,10 +23,11 @@
     justify-content: center;
     align-items: center;
     border-radius: 10px;
-    width: 600px;
+    margin-top: 80px;
+    width: 110%;
 }
 .adatok-container h1 {
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 10px;
     text-align: center;
 }
@@ -48,7 +45,7 @@
 }
 
 .adatok-container button {
-    background-color: #097F26;
+    background-color: #5dab2c;
     color: #fff;
     border: none;
     border-radius: 10px;
@@ -72,7 +69,7 @@
     width: 500px;
 }
 .adatok-container button:hover {
-    background-color: #07591b;
+    background-color: #3d7710;
 }
 .adatTable{
     border-collapse: collapse;
@@ -80,7 +77,6 @@
 }
 .adatTable td, .adatTable th{
     padding: 10px;
-    border: 1px solid #ddd;
     text-align: left;
 }
 .adatTable tr{

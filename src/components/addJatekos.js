@@ -194,7 +194,7 @@ export const AddJatekos = () => {
                 <p className="szilny">Szabadon igazolható labdarúgókat nyilvántartó webes felület</p>
                 <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
                 <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
-                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubok</button>
                 <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
             <h1 className="profileh1">Regisztrálja adatait!</h1>

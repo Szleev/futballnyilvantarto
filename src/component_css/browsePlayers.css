@@ -8,7 +8,6 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-
 }
 .search-bar{
     width: 400px;
@@ -18,7 +17,7 @@
     padding: 2px;
 }
 .no-result{
-    color: #097F26;
+    color: #3d7710;
     font-weight: bold;
 }
 .jatekos-list {
@@ -48,18 +47,7 @@
     width: 150px;
     height: 30px;
 }
-
-.jatekos-card img {
+.jatekos-card-profilkep{
     width: 200px;
     height: 200px;
-    object-fit: cover;
-    margin-right: 20px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-.jatekosok-title{
-    background-color: #f7f7f7;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    color: #097F26;
 }

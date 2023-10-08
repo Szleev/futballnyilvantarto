@@ -9,6 +9,11 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+.editprofilkep{
+    margin-top: 60px;
+    width: 200px;
+    height: 200px;
+}
 .adatok-header{
     background-color: #f4f4f4;
     margin-bottom: 20px;
@@ -24,7 +29,6 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    width: 400px;
 }
 .edit-input-container input{
     margin-bottom: 10px;
@@ -35,6 +39,10 @@
     font-size: 16px;
     color: #333;
     width: 250px;
+}
+.edit-input-container button{
+    width: 100px;
+    height: 30px;
 }
 
 

@@ -16,14 +16,12 @@
 }
 .button-container {
     margin-top: 10px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.button-container button {
-    display: block;
-    margin: 0 auto;
-    margin-bottom: 10px;
-}
 .klub-profil-adat {
     display: flex;
     justify-content: center;
@@ -31,13 +29,7 @@
     flex-direction: column;
     text-align: center;
 }
-.klub-name-container{
-    background-color: #f2f2f2;
-    padding: 10px;
-    border-radius: 10px;
-    color: black;
-    font-weight: bold;
-}
+
 .klub-table-container {
     margin: 20px;
     padding: 20px;
@@ -45,22 +37,12 @@
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     background-color: #f2f2f2;
-}
-
-table {
     width: 100%;
-    border-collapse: collapse;
-    font-weight: bold;
 }
-
-th, td {
-    padding: 10px;
-}
-
-th {
-    background-color: #f2f2f2;
+.klub-table-container th{
     text-align: left;
 }
-td{
+.klub-table-container td{
     text-align: right;
 }
+

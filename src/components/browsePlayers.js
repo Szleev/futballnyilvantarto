@@ -81,18 +81,13 @@ export const Jatekosok = () => {
     return (
         <div className="jatekos-container">
             <div className="navigation-bar">
-                <button className="playersbutton" onClick={navigateToPlayers}>
-                    Igazolható játékosok
-                </button>
-                <button className="profilbutton" onClick={navigateToProfil}>
-                    Profil
-                </button>
-                <button className="profilbutton" onClick={navigateToClubs}>Klubbok</button>
-                <button className="logOut" onClick={logOut}>
-                    Kilépés
-                </button>
+                <p className="szilny">Szabadon igazolható labdarúgókat nyilvántartó webes felület</p>
+                <button className="playersbutton" onClick={navigateToPlayers}>Igazolható játékosok</button>
+                <button className="profilbutton" onClick={navigateToProfil}>Profil</button>
+                <button className="profilbutton" onClick={navigateToClubs}>Klubok</button>
+                <button className="logOut" onClick={logOut}>Kilépés</button>
             </div>
-            <h1 className="jatekosok-title">Igazolható játékosok</h1>
+            <h1 className="profileh1">Igazolható játékosok</h1>
             <input
                 className="search-bar"
                 type="text"
@@ -102,7 +97,7 @@ export const Jatekosok = () => {
             />
             <div className="jatekos-list">
                 {filteredJatekosok.length === 0 ? (
-                    <p className="no-result">Nincs találat a keresésre.</p>
+                    <p className="no-result">Nincs találat a keresésre...</p>
                 ) : (
                     filteredJatekosok.map((jatekos) => (
                         <div key={jatekos.userId} className="jatekos-card">

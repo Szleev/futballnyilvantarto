@@ -52,7 +52,7 @@ export const Jatekosok = () => {
 
 
     const navigateToProfil = () => {
-        navigate("/profil");
+        navigate("/checkProfile");
     };
 
     const navigateToDetails = (userId) => {

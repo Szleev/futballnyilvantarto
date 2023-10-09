@@ -44,7 +44,7 @@ export const Profil = () =>{
         fetchJatekosLista();
     }, []);
     const navigateToProfil = () => {
-        navigate('/profil');
+        navigate('/checkProfile');
     };
     const navigateToPlayers = () => {
         navigate('/jatekosok');

@@ -40,7 +40,7 @@ export const Klubbok = () => {
     }, []);
 
     const navigateToProfil = () => {
-        navigate("/profil");
+        navigate("/checkProfile");
     };
 
     const navigateToPlayers = () => {

@@ -98,7 +98,7 @@ const EditKlub = () => {
 
 
     const navigateToProfil = () => {
-        navigate('/profil');
+        navigate('/checkProfile');
     };
 
     const navigateToPlayers = () => {

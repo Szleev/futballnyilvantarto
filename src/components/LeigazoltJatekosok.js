@@ -26,7 +26,6 @@ export const LeigazoltJatekosok = () => {
                     const leigazolasData = leigazolasDoc.data();
                     const jatekosId = leigazolasData.userId;
 
-                    // Az adott játékos dokumentumának a lekérdezése a Játékosok táblában a jatekosId alapján
                     const jatekosQuery = query(collection(database, "Játékosok"), where("userId", "==", jatekosId));
                     const jatekosSnapshot = await getDocs(jatekosQuery);
 
@@ -34,7 +33,6 @@ export const LeigazoltJatekosok = () => {
                         const jatekosDoc = jatekosSnapshot.docs[0];
                         const jatekosData = jatekosDoc.data();
 
-                        // Az adatok hozzáadása az állapotba
                         leigazoltJatekosokData.push({
                             jatekosId,
                             vezeteknev: jatekosData.Vezeteknev,
@@ -58,29 +56,29 @@ export const LeigazoltJatekosok = () => {
     }, [KlubId]);
 
     const handleElbocsajtas = async (jatekosId) => {
-        try {
-            // Az adott játékos törlése a Leigazolasok táblából
-            // Ehhez használhatod a Firestore 'deleteDoc' függvényét.
-            const leigazolasokCollectionRef = collection(database, "Leigazolasok");
-            const leigazolasokQuery = query(leigazolasokCollectionRef, where("userId", "==", jatekosId));
-            const leigazolasokSnapshot = await getDocs(leigazolasokQuery);
+        const confirmed = window.confirm('Biztosan el akarod bocsátani ezt a játékost??');
+        if (confirmed){
+            try {
+                const leigazolasokCollectionRef = collection(database, "Leigazolasok");
+                const leigazolasokQuery = query(leigazolasokCollectionRef, where("userId", "==", jatekosId));
+                const leigazolasokSnapshot = await getDocs(leigazolasokQuery);
 
-            if (!leigazolasokSnapshot.empty) {
-                const leigazolasDoc = leigazolasokSnapshot.docs[0];
-                const leigazolasDocRef = doc(database, "Leigazolasok", leigazolasDoc.id);
-                await deleteDoc(leigazolasDocRef);
+                if (!leigazolasokSnapshot.empty) {
+                    const leigazolasDoc = leigazolasokSnapshot.docs[0];
+                    const leigazolasDocRef = doc(database, "Leigazolasok", leigazolasDoc.id);
+                    await deleteDoc(leigazolasDocRef);
+                }
+
+                setLeigazoltJatekosok((prevJatekosok) => prevJatekosok.filter((jatekos) => jatekos.jatekosId !== jatekosId));
+
+            } catch (error) {
+                console.error('Hiba az elbocsátás közben:', error);
             }
-
-            // Módosítsd az állapotot úgy, hogy eltávolítsd a játékost a listából
-            setLeigazoltJatekosok((prevJatekosok) => prevJatekosok.filter((jatekos) => jatekos.jatekosId !== jatekosId));
-
-        } catch (error) {
-            console.error('Hiba az elbocsátás közben:', error);
         }
     };
 
     const navigateToProfil = () => {
-        navigate('/profil');
+        navigate('/checkProfile');
     };
 
     const navigateToPlayers = () => {

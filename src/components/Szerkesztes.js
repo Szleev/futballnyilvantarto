@@ -56,7 +56,7 @@ export const Szerkesztes = () => {
     }, [userId]);
 
     const navigateToProfil = () => {
-        navigate('/profil');
+        navigate('/checkProfile');
     };
 
     const navigateToPlayers = () => {

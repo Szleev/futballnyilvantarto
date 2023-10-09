@@ -9,6 +9,7 @@ export const KlubProfil = () => {
     const navigate = useNavigate();
 
     const [klubData, setKlubData] = useState(null);
+    const [klubokLeigazolasokSzama, setKlubokLeigazolasokSzama] = useState(0);
 
 
 
@@ -30,14 +31,19 @@ export const KlubProfil = () => {
                 const klubDocId = klubDoc.id;
                 const klubData = klubDoc.data();
                 setKlubData(klubData);
+
+                const leigazolasokQuery = query(collection(database, "Leigazolasok"), where("KlubId", "==", userId));
+                const leigazolasokSnapshot = await getDocs(leigazolasokQuery);
+                setKlubokLeigazolasokSzama(leigazolasokSnapshot.size);
             }
+
         };
 
         fetchData();
     }, []);
 
     const navigateToProfil = () => {
-        navigate('/profil');
+        navigate('/checkProfile');
     };
 
     const navigateToPlayers = () => {
@@ -121,7 +127,7 @@ export const KlubProfil = () => {
                                 </tr>
                                 <tr>
                                     <th>Leigazolt játékosok száma:</th>
-                                    <td>{klubData.LeigazoltJatekosokSzama}</td>
+                                    <td>{klubokLeigazolasokSzama}</td>
                                 </tr>
                                 <tr>
                                     <th>Klub egyedi azonosítója:</th>

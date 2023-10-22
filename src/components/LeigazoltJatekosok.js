@@ -139,7 +139,7 @@ export const LeigazoltJatekosok = () => {
                             <td>{jatekos.poszt}</td>
                             <td>{jatekos.igazolasDatum}</td>
                             <td>
-                                <button onClick={() => handleElbocsajtas(jatekos.jatekosId)}>
+                                <button className="elbocsatas" onClick={() => handleElbocsajtas(jatekos.jatekosId)}>
                                     Elbocsátás
                                 </button>
                             </td>

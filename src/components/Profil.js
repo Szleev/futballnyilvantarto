@@ -10,6 +10,8 @@ import {v4} from 'uuid'
 import * as url from "url";
 import transition from "../transition";
 import {Szerkesztes} from "./Szerkesztes";
+import {faEdit, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 
@@ -159,9 +161,9 @@ export const Profil = () =>{
                                             </tbody>
                                         </table>
                                         <div className="updateData">
-                                            <button className="editButton" onClick={() => navigate(`/szerkesztes/${jatekos.userId}`)}>Szerkesztés</button>
+                                            <button className="editButton" onClick={() => navigate(`/szerkesztes/${jatekos.userId}`)}><FontAwesomeIcon icon={faEdit} /></button>
                                             <br/>
-                                            <button className="deleteButton" onClick={() => deleteJatekos(jatekos.id)}>Profil törlése</button>
+                                            <button className="delete" onClick={() => deleteJatekos(jatekos.id)}> <FontAwesomeIcon icon={faTrash} /></button>
                                         </div>
                                     </div>
                                 )}

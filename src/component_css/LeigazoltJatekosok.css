@@ -15,7 +15,7 @@
 }
 
 .jatekos-table {
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
     background-color: #c0b7b7;
@@ -48,9 +48,9 @@
     display: block;
     margin: 0 auto;
 }
-.jatekos-table button{
+.elbocsatas{
     background-color: #e06565;
 }
-.jatekos-table button:hover{
+.elbocsatas:hover{
     background-color: #de3030;
 }

@@ -99,7 +99,7 @@ export const Szerkesztes = () => {
             }
             const jatekosDocRef = doc(database, "Játékosok", jatekosDocId);
             await updateDoc(jatekosDocRef, jatekosData);
-            navigate('/profil');
+            navigate('/checkProfile');
         } catch (err) {
             console.error(err);
         }

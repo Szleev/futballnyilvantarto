@@ -5,7 +5,7 @@ import { auth, database } from "../config/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 import "../component_css/admin.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faFutbol } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faFutbol, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export const Admin = () => {
     const auth = getAuth();
@@ -115,6 +115,7 @@ export const Admin = () => {
                     <table>
                         <thead>
                         <tr>
+                            <th>Művelet</th>
                             <th>Azonosító</th>
                             <th>Profilkép</th>
                             <th>Név</th>
@@ -130,6 +131,14 @@ export const Admin = () => {
                         <tbody>
                         {playersData.map((player, index) => (
                             <tr key={index}>
+                                <td>
+                                    <button onClick={() => navigate(`/szerkesztes/${player.userId}`)} className="gomb">
+                                    <FontAwesomeIcon icon={faEdit} />
+                                    </button>
+                                    <button className="delete">
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </button>
+                                </td>
                                 <td>{player.userId}</td>
                                 <td>
                                     <img
@@ -160,6 +169,7 @@ export const Admin = () => {
                 <table>
                     <thead>
                     <tr>
+                        <th>Művelet</th>
                         <th>Azonosító</th>
                         <th>Profilkép</th>
                         <th>Klub név</th>
@@ -169,6 +179,13 @@ export const Admin = () => {
                     <tbody>
                     {clubsData.map((club, index) => (
                         <tr key={index}>
+                            <td><button onClick={() => navigate(`/editklub/${club.KlubId}`)} className="gomb">
+                                <FontAwesomeIcon icon={faEdit} />
+                            </button>
+                                <br/>
+                                <button className="delete">
+                                    <FontAwesomeIcon icon={faTrash} />
+                                </button></td>
                             <td>{club.KlubId}</td>
                             <td>
                                 <img

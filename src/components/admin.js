@@ -31,19 +31,14 @@ export const Admin = () => {
 
             const playersWithClubs = await Promise.all(
                 normalPlayers.map(async (player) => {
-
                     const leigazolasokCollectionRef = collection(database, "Leigazolasok");
                     const leigazolasokSnapshot = await getDocs(leigazolasokCollectionRef);
                     const leigazolasok = leigazolasokSnapshot.docs.map((doc) => doc.data());
 
-
                     const matchingLeigazolas = leigazolasok.find((leigazolas) => leigazolas.userId === player.userId);
 
                     if (matchingLeigazolas) {
-
                         const KlubId = matchingLeigazolas.KlubId;
-
-
                         player.KlubId = KlubId;
                     }
 
@@ -56,11 +51,18 @@ export const Admin = () => {
             const clubsCollectionRef = collection(database, "Klubok");
             const clubsSnapshot = await getDocs(clubsCollectionRef);
             const clubs = clubsSnapshot.docs.map((doc) => doc.data());
-            setClubsData(clubs);
+
+            const clubsWithLeigazoltSzam = clubs.map((club) => {
+                const leigazoltJatekosokSzama = playersWithClubs.filter((player) => player.KlubId === club.KlubId).length;
+                return { ...club, leigazoltJatekosokSzama };
+            });
+
+            setClubsData(clubsWithLeigazoltSzam);
         };
 
         fetchData();
     }, []);
+
 
 
 
@@ -175,7 +177,7 @@ export const Admin = () => {
                                 />
                             </td>
                             <td>{club.Nev}</td>
-                            <td></td>
+                            <td>{club.leigazoltJatekosokSzama}</td>
                         </tr>
                     ))}
                     </tbody>

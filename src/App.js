@@ -13,6 +13,7 @@ import AddKlub from "./components/addKlub";
 import KlubProfil from "./components/klubProfil";
 import EditKlub from "./components/EditKlub";
 import LeigazoltJatekosok from "./components/LeigazoltJatekosok";
+import Admin from "./components/admin";
 
 function App() {
     return (
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/klubprofil" element={<KlubProfil />} />
                 <Route path="/editklub/:KlubId" element={<EditKlub />} />
                 <Route path="/igazolasok/:KlubId" element={<LeigazoltJatekosok />} />
+                <Route path="/admin" element={<Admin />} />
 
             </Routes>
         </Router>

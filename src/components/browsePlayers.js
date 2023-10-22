@@ -22,13 +22,13 @@ export const Jatekosok = () => {
 
                 const leigazolasokCollectionRef = collection(database, "Leigazolasok");
                 const leigazolasokSnapshot = await getDocs(leigazolasokCollectionRef);
-
                 const leigazoltUserIds = leigazolasokSnapshot.docs.map((doc) => doc.data().userId);
 
                 jatekosSnapshot.forEach((doc) => {
                     const jatekosData = doc.data();
+                    const { isAdmin } = jatekosData;
 
-                    if (!leigazoltUserIds.includes(jatekosData.userId)) {
+                    if (!leigazoltUserIds.includes(jatekosData.userId) && !isAdmin) {
                         jatekosokData.push(jatekosData);
                     }
                 });
@@ -38,6 +38,7 @@ export const Jatekosok = () => {
                 console.error("Hiba a játékosok lekérdezése közben:", error);
             }
         };
+
 
         fetchJatekosok();
     }, []);

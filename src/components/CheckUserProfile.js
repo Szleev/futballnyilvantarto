@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { auth , database } from "../config/firebase-config";
+import { auth, database } from "../config/firebase-config";
 
 export const CheckUserProfile = () => {
     const navigate = useNavigate();
@@ -15,29 +15,37 @@ export const CheckUserProfile = () => {
             getDocs(jatekosokQuery)
                 .then((jatekosSnapshot) => {
                     if (!jatekosSnapshot.empty) {
-                        setUserHasProfile(true);
-                        console.log(user.uid)
-                        navigate('/profil');
+                        const jatekos = jatekosSnapshot.docs[0].data();
+                        if (jatekos.isAdmin) {
+                            navigate('/admin');
+                        } else {
+                            setUserHasProfile(true);
+                            navigate('/profil');
+                        }
                     } else {
-                        const klubokQuery = query(collection(database, "Klubok"), where("KlubId", "==", user.uid));
-                        getDocs(klubokQuery)
-                            .then((klubokSnapshot) => {
-                                if (!klubokSnapshot.empty) {
-                                    const klub = klubokSnapshot.docs[0].data();
-                                    if (klub.IsClub) {
-                                        navigate('/klubprofil');
+                        if (user.isAdmin) {
+                            navigate('/admin');
+                        } else {
+                            const klubokQuery = query(collection(database, "Klubok"), where("KlubId", "==", user.uid));
+                            getDocs(klubokQuery)
+                                .then((klubokSnapshot) => {
+                                    if (!klubokSnapshot.empty) {
+                                        const klub = klubokSnapshot.docs[0].data();
+                                        if (klub.IsClub) {
+                                            navigate('/klubprofil');
+                                        } else {
+                                            setUserHasProfile(false);
+                                            navigate('/uploadData');
+                                        }
                                     } else {
                                         setUserHasProfile(false);
                                         navigate('/uploadData');
                                     }
-                                } else {
-                                    setUserHasProfile(false);
-                                    navigate('/uploadData');
-                                }
-                            })
-                            .catch((error) => {
-                                console.error("Hiba a klubok lekérdezése során:", error);
-                            });
+                                })
+                                .catch((error) => {
+                                    console.error("Hiba a klubok lekérdezése során:", error);
+                                });
+                        }
                     }
                 })
                 .catch((error) => {

@@ -163,7 +163,7 @@ export const Profil = () =>{
                                         <div className="updateData">
                                             <button className="editButton" onClick={() => navigate(`/szerkesztes/${jatekos.userId}`)}><FontAwesomeIcon icon={faEdit} /></button>
                                             <br/>
-                                            <button className="delete" onClick={() => deleteJatekos(jatekos.id)}> <FontAwesomeIcon icon={faTrash} /></button>
+                                            <button className="delete" onClick={() => deleteJatekos(jatekos.id)}> <FontAwesomeIcon icon={faTrash} /> </button>
                                         </div>
                                     </div>
                                 )}
